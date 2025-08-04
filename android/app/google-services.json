@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "366279919511",
+    "project_id": "moviewreviewapp",
+    "storage_bucket": "moviewreviewapp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:366279919511:android:14b9acd56d8f1e0defa6d2",
+        "android_client_info": {
+          "package_name": "com.moviereviewapp.aarona"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCsqd3p5SpOOuED0ggEgQDQoad24JdrfTI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
