@@ -1,32 +1,37 @@
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import React from 'react'
 
-const ButtonElement = () => {
+interface ButtonElementProps {
+  text: string;
+}
+const ButtonElement = ({ text }: ButtonElementProps) => {
   return (
     <TouchableOpacity style={styles.button}>
-      <Text style={styles.buttonText}>Login</Text>
+      <Text style={styles.buttonText}>{text}</Text>
     </TouchableOpacity>
   )
 }
 
 const styles = StyleSheet.create({
   button: {
-    width: "95%",
-    marginRight: 10,
+    width: "89%",
+    marginRight: 20,
     marginLeft: 10,
     paddingHorizontal: 10,
     paddingVertical: 10,
-    backgroundColor: '#FFB703',
+    backgroundColor: '#e0a204ff',
     padding: 12,
     borderRadius: 16,
     alignItems: 'center',
-    marginTop: 15,
+    marginTop: 0,
   },
   buttonText: {
-    color: 'white',
+    // color: 'white',
+    color: '#d3d1d1ff',
     fontSize: 16,
-    fontWeight: 'bold',
-    fontFamily: "serif",
+    fontWeight: 900,
+    fontFamily: "Poppins-ExtraBold",
+    letterSpacing: 1,
   },
 
 

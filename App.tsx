@@ -8,6 +8,7 @@
 import { NewAppScreen } from '@react-native/new-app-screen';
 import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
 import LoginScreen from './src/Screens/LoginScreen';
+import SignUpScreen from './src/Screens/SignUpScreen';
 
 function App() {
 
@@ -15,6 +16,8 @@ function App() {
   return (
     <View style={styles.container}>
      <LoginScreen/>
+     {/* <SignUpScreen/> */}
+    
     </View>
   );
 }
