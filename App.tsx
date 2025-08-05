@@ -6,27 +6,23 @@
  */
 
 import { NewAppScreen } from '@react-native/new-app-screen';
-import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
-import LoginScreen from './src/Screens/LoginScreen';
-import SignUpScreen from './src/Screens/SignupScreen';
+import { StatusBar, StyleSheet, Text, useColorScheme, View } from 'react-native';
+// import LoginScreen from './src/Screens/LoginScreen';
+// import SignUpScreen from './src/Screens/SignupScreen';
+import { NavigationContainer } from '@react-navigation/native';
+import NonAuthStack from './src/navigation/NonAuthStack';
+import AuthStack from './src/navigation/AuthStack';
 
 
 function App() {
 
 
   return (
-    <View style={styles.container}>
-     {/* <LoginScreen/> */}
-     <SignUpScreen/>
-    
-    </View>
+    <NavigationContainer>
+      <NonAuthStack />
+    </NavigationContainer>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
 
 export default App;
