@@ -1,21 +1,33 @@
-import { View, StyleSheet, TextInput, Image } from 'react-native'
+import { View, StyleSheet, TextInput, Image, Text } from 'react-native'
 import React from 'react'
 
 
 interface InputElementProps {
   placeholder: string;
   icon: any;
-  backgroundColor:string;
+  backgroundColor: string;
+  onChange?: (text: string) => void;
+  value?: string;
+  error?: string;
+  errorMessage?: string;
+  name?: string;
+  color?: string;
+
 }
 
-const InputElement = ({ placeholder, icon,backgroundColor }: InputElementProps) => {
+const InputElement = ({ placeholder, icon, backgroundColor, onChange, value, error, errorMessage, name, color }: InputElementProps) => {
+  let passwordNotMatched = (error == "confirmPw" && name == "password")
   return (
     <View style={styles.container}>
-      <View style={[styles.inputContainer,{backgroundColor:backgroundColor}]}>
+      <View style={[styles.inputContainer, { backgroundColor: backgroundColor, borderColor: (name && error && name == error || passwordNotMatched) ? "red" : undefined }]}>
         <Image source={icon} style={styles.icon} />
-        <TextInput style={styles.input} placeholder={placeholder} placeholderTextColor='#d3d1d1ff' />
+        <TextInput style={styles.input} placeholder={placeholder} placeholderTextColor='#d3d1d1ff' onChangeText={(text) => onChange?.(text)} value={value} />
       </View>
-
+      {
+        error == name ? <Text style={{ color: color}}>
+          {errorMessage}
+        </Text>:null
+      }
     </View>
   )
 }

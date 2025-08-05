@@ -3,10 +3,11 @@ import React from 'react'
 
 interface ButtonElementProps {
   text: string;
+  onPress?:()=>void;
 }
-const ButtonElement = ({ text }: ButtonElementProps) => {
+const ButtonElement = ({ text ,onPress}: ButtonElementProps) => {
   return (
-    <TouchableOpacity style={styles.button}>
+    <TouchableOpacity style={styles.button} onPress={()=>onPress?.()}>
       <Text style={styles.buttonText}>{text}</Text>
     </TouchableOpacity>
   )

@@ -1,15 +1,113 @@
-import { Text, StyleSheet, ImageBackground, Image, View, TouchableOpacity } from 'react-native'
-import React from 'react'
+import { Text, StyleSheet, ImageBackground, Image, View, TouchableOpacity,ActivityIndicator } from 'react-native'
+import React, { useState } from 'react'
 import InputElement from '../Components/InputElement'
 import ButtonElement from '../Components/ButtonElement'
 import { BlurView } from '@react-native-community/blur';
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { NonAuthStackParamList } from '../types/NavigationTypes'
+import { createUserWithEmailAndPassword, getAuth, signOut } from '@react-native-firebase/auth';
+
 
 type Props = NativeStackScreenProps<NonAuthStackParamList, 'Signup'>;
 
 const SignUpScreen = ({ navigation }: Props) => {
-  console.log("signed up screen reached")
+  // const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const emailFormat = /^.+@.+\..+$/;
+
+
+
+
+  const handleEmail = (text: string) => {
+    setEmail(text.trim());
+    setError('');
+    setErrorMessage('');
+
+  }
+  const handlePassword = (text: string) => {
+    setPassword(text.trim());
+    setError('');
+    setErrorMessage('');
+
+  }
+  const handleConfirmPassword = (text: string) => {
+    setConfirmPassword(text.trim())
+    setError('');
+    setErrorMessage('');
+
+  }
+  // console.log("signed up screen reached")
+
+
+  const validateSignUp = () => {
+    if (!email.trim() || !password.trim() || !confirmPassword.trim()) {
+      return false;
+
+    }
+    else if (!emailFormat.test(email)) {
+      setError('email');
+      setErrorMessage('Invalid Email Format');
+      return false;
+    }
+
+    else if (password.length < 6) {
+      setError('password');
+      setErrorMessage('Password must be atleast 6 characters')
+      return false;
+    }
+
+    else if (password !== confirmPassword) {
+      setError('confirmPw')
+      setErrorMessage('Password did not match')
+      return false;
+    }
+    return true;
+
+  }
+
+  const handleSignup = () => {
+    const isValid = validateSignUp()
+    if (!isValid) {
+      return;
+    }
+    setLoading(true)
+    createUserWithEmailAndPassword(getAuth(), email, password)
+    
+      .then(() => {
+        console.log('User account created!');
+      
+         navigation.navigate('Login');
+        // getAuth().signOut();
+      })
+      .catch(error => {
+        if (error.code === 'auth/email-already-in-use') {
+          console.log('That email address is already in use!');
+        }
+
+        if (error.code === 'auth/invalid-email') {
+          console.log('That email address is invalid!');
+        }
+
+        console.error(error);
+      })
+      .finally(() => setLoading(false))
+
+
+  }
+
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" />
+      </View>
+    )
+  }
   return (
     <ImageBackground style={styles.container} source={require('../../assets/signupBackground.png')} >
       <View style={styles.darkLayer} />
@@ -29,17 +127,17 @@ const SignUpScreen = ({ navigation }: Props) => {
         <Text style={styles.title}>Sign up</Text>
 
         <Text style={styles.font}>Create an account to continue.</Text>
-        <InputElement placeholder='Username' icon={require('../../assets/person.png')} backgroundColor='#a9a8a899' />
-        <InputElement placeholder='Email' icon={require('../../assets/email.png')} backgroundColor='#a9a8a899' />
-        <InputElement placeholder='Password' icon={require('../../assets/lock.png')} backgroundColor='#a9a8a899' />
-        <ButtonElement text="Sign Up" />
+        <InputElement placeholder='Email' icon={require('../../assets/email.png')} backgroundColor='#a9a8a899' onChange={handleEmail} error={error} errorMessage={errorMessage} name='email' color='red' />
+        <InputElement placeholder='Password' icon={require('../../assets/lock.png')} backgroundColor='#a9a8a899' onChange={handlePassword} error={error} errorMessage={errorMessage} name='password' color='red' />
+        <InputElement placeholder='ConfirmPw' icon={require('../../assets/person.png')} backgroundColor='#a9a8a899' onChange={handleConfirmPassword} error={error} errorMessage={errorMessage} name='confirmPw' color='red' />
+        <ButtonElement text="Sign Up" onPress={handleSignup} />
         <View style={styles.signupRow}>
           <Text style={styles.signupText}>Already have an account? Go to the </Text>
           <TouchableOpacity onPress={() => navigation.navigate('Login')}>
             <Text style={styles.loginLink}>Login Page</Text>
           </TouchableOpacity>
         </View>
-      {/* </BlurView> */}
+        {/* </BlurView> */}
       </View>
     </ImageBackground >
   )
@@ -136,17 +234,17 @@ const styles = StyleSheet.create({
     borderRadius: 40,
   },
   signupRow: {
-  flexDirection: 'row',
-  alignItems: 'center',
-  marginTop: 15,
-  marginRight: 40,
-},
-loginLink: {
-  color: '#f2a20fff',
-  fontWeight: '900',
-  fontFamily: 'OpenSans-Regular',
-  fontSize: 12,
-}
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 15,
+    marginRight: 40,
+  },
+  loginLink: {
+    color: '#f2a20fff',
+    fontWeight: '900',
+    fontFamily: 'OpenSans-Regular',
+    fontSize: 12,
+  }
 
 
 
