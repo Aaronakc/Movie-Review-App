@@ -1,15 +1,76 @@
-import { View, Text, StyleSheet, Image, ImageBackground, Pressable, TouchableOpacity } from 'react-native'
-import React from 'react'
+import { View, Text, StyleSheet, Image, ImageBackground, Pressable, TouchableOpacity, ActivityIndicator } from 'react-native'
+import React, { useState } from 'react'
 import InputElement from '../Components/InputElement'
 import ButtonElement from '../Components/ButtonElement'
 import { BlurView } from '@react-native-community/blur';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { NonAuthStackParamList } from '../types/NavigationTypes';
+import { getAuth, signInWithEmailAndPassword } from '@react-native-firebase/auth';
 
 type Props = NativeStackScreenProps<NonAuthStackParamList, 'Login'>;
 
 
 const LoginScreen = ({ navigation }: Props) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const emailFormat = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  const handleEmail = (text: string) => {
+    setEmail(text.trim())
+    setError('');
+    setErrorMessage('');
+  }
+
+  const handlePassword = (text: string) => {
+    setPassword(text.trim());
+    setError('');
+    setErrorMessage('');
+
+  }
+
+
+  const handleLogin = () => {
+    if (!email.trim() || !password.trim()) {
+      return;
+    }
+
+    if (!emailFormat.test(email)) {
+      setError('email');
+      setErrorMessage('Invalid Email Format');
+      return;
+    }
+    setLoading(true);
+    signInWithEmailAndPassword(getAuth(), email, password)
+      .then(() => {
+        console.log('User signed in!');
+      })
+      .catch(error => {
+        if (error.code === 'auth/email-already-in-use') {
+          console.log('That email address is already in use!');
+        }
+
+        if (error.code === 'auth/invalid-email') {
+          console.log('That email address is invalid!');
+        }
+
+        console.error(error);
+      }
+      )
+      .finally(() => setLoading(false))
+
+  }
+
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" />
+      </View>
+    )
+  }
   return (
     <ImageBackground style={styles.container} source={require('../../assets/loginBackground.png')}>
       <View style={styles.darkLayer} />
@@ -29,10 +90,10 @@ const LoginScreen = ({ navigation }: Props) => {
 
         <Text style={styles.title}>Login</Text>
         <Text style={styles.font}>Please sign in to continue.</Text>
-        <InputElement placeholder='Username' icon={require('../../assets/person.png')} backgroundColor='#acacac99' />
-        <InputElement placeholder='Password' icon={require('../../assets/lock.png')} backgroundColor='#acacac99' />
+        <InputElement placeholder='Email' icon={require('../../assets/person.png')} backgroundColor='#acacac99' onChange={handleEmail} error={error} errorMessage={errorMessage} name="email" color="red" />
+        <InputElement placeholder='Password' icon={require('../../assets/lock.png')} backgroundColor='#acacac99' onChange={handlePassword} />
         <Text style={styles.forgotPwText}>Forgot Password?</Text>
-        <ButtonElement text="Login" />
+        <ButtonElement text="Login" onPress={handleLogin} />
         <View style={styles.signUpRow}>
           <Text style={styles.signupText}>Don't have an account? Please </Text>
           <TouchableOpacity onPress={() => navigation.navigate('Signup')}><Text style={{ color: "#FFB703", fontFamily: "OpenSans-Bold", fontSize: 12 }} >Sign Up </Text></TouchableOpacity>
