@@ -1,11 +1,15 @@
-import { View, Text, StyleSheet, Image, ImageBackground } from 'react-native'
+import { View, Text, StyleSheet, Image, ImageBackground, Pressable, TouchableOpacity } from 'react-native'
 import React from 'react'
 import InputElement from '../Components/InputElement'
 import ButtonElement from '../Components/ButtonElement'
 import { BlurView } from '@react-native-community/blur';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { NonAuthStackParamList } from '../types/NavigationTypes';
+
+type Props = NativeStackScreenProps<NonAuthStackParamList, 'Login'>;
 
 
-const LoginScreen = () => {
+const LoginScreen = ({ navigation }: Props) => {
   return (
     <ImageBackground style={styles.container} source={require('../../assets/loginBackground.png')}>
       <View style={styles.darkLayer} />
@@ -15,12 +19,12 @@ const LoginScreen = () => {
 
       <View style={styles.loginContainer}>
         {/* <BlurView blurType="dark" blurAmount={25}> */}
-        <BlurView
+        {/* <BlurView
           style={styles.blurBackground}
           blurType="light"
           blurAmount={10}
           reducedTransparencyFallbackColor="white"
-        />
+        /> */}
         <View style={styles.innerdarkLayer} />
 
         <Text style={styles.title}>Login</Text>
@@ -29,7 +33,13 @@ const LoginScreen = () => {
         <InputElement placeholder='Password' icon={require('../../assets/lock.png')} backgroundColor='#acacac99' />
         <Text style={styles.forgotPwText}>Forgot Password?</Text>
         <ButtonElement text="Login" />
-        <Text style={styles.signupText}>Don't have an account? Please <Text style={{ color: "#FFB703", fontFamily: "OpenSans-Bold" }}>Sign Up</Text> first.</Text>
+        <View style={styles.signUpRow}>
+          <Text style={styles.signupText}>Don't have an account? Please </Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Signup')}><Text style={{ color: "#FFB703", fontFamily: "OpenSans-Bold", fontSize: 12 }} >Sign Up </Text></TouchableOpacity>
+          <Text style={styles.signupText}>
+            first.
+          </Text>
+        </View>
         {/* </BlurView> */}
         {/* </BlurView> */}
       </View>
@@ -56,13 +66,13 @@ const styles = StyleSheet.create({
     marginTop: 25,
   },
   blurBackground: {
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-  borderRadius: 40,
-},
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    borderRadius: 40,
+  },
 
   darkLayer: {
     position: 'absolute',
@@ -92,7 +102,7 @@ const styles = StyleSheet.create({
     // color: 'rgba(255, 255, 255, 0.9)',
     color: '#d3d1d1ff',
 
-    
+
     fontFamily: "Poppins-Bold",
     letterSpacing: 1.5,
     fontWeight: "bold",
@@ -136,9 +146,13 @@ const styles = StyleSheet.create({
     fontFamily: "OpenSans-Regular",
     fontWeight: 400,
     fontSize: 12,
+    color: "white",
+  },
+  signUpRow: {
     marginTop: 20,
     marginRight: 50,
-    color: "white",
+    flexDirection: "row",
+    alignItems: "center"
   }
 })
 
