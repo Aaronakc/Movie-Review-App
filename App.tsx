@@ -1,10 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
 import { NewAppScreen } from '@react-native/new-app-screen';
 import { ActivityIndicator, StatusBar, StyleSheet, Text, useColorScheme, View } from 'react-native';
 // import LoginScreen from './src/Screens/LoginScreen';
@@ -19,7 +12,7 @@ import { getAuth, onAuthStateChanged } from '@react-native-firebase/auth';
 function App() {
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState();
-
+  console.log("hello")
   function handleAuthStateChanged(user: any) {
     if (
       user && user.metadata && 
