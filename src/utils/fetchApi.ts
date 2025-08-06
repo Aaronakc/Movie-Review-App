@@ -1,17 +1,17 @@
 import axios from "axios";
-import Config from "react-native-config";
+import axiosInstance from "./axiosInstance";
 
-export const fetchMovies = async (endpoint: string) => {
+
+export const fetchMovies = async (endpoint: string | undefined) => {
+  let url = `movie/${endpoint}?language=en-US&page=1`
+
+  if(endpoint == "trending") {
+    url = `/trending/all/week?language=en-US`
+  }
 
   try {
-    const response = await axios.get(
-      `https://api.themoviedb.org/3/movie/${endpoint}?language=en-US&page=1`,
-      {
-        headers: {
-          Authorization: `Bearer ${Config.TMDB_API_TOKEN}`,
-          Accept: 'application/json',
-        },
-      }
+    const response = await axiosInstance.get(
+      url
     );
   
     return response.data.results;

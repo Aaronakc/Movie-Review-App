@@ -1,17 +1,21 @@
-import { View, Text, FlatList, Image, StyleSheet, ActivityIndicator } from 'react-native'
+import { View, Text, FlatList, Image, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Movies } from '../types/MoviesTypes'
 import { fetchMovies } from '../utils/fetchApi';
 import FastImage from 'react-native-fast-image';
+import { HomeTabScreenProps } from '../types/NavigationTypes';
 
 interface MovieCarouselProps {
-  topic: string;
-  endpoint: string;
+  topic?: string;
+  endpoint?: string;
+  navigation?: HomeTabScreenProps<'BottomHome'>["navigation"]
+  searchedMovies?: Movies[]
 }
 
-const MovieCarousel = ({ topic, endpoint }: MovieCarouselProps) => {
 
-  const [movies, setMovies] = useState<Movies[]>([])
+const MovieCarousel = ({ topic, endpoint, navigation, searchedMovies }: MovieCarouselProps) => {
+
+  const [movies, setMovies] = useState<Movies[]>(searchedMovies && searchedMovies.length > 0 ? searchedMovies : [])
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -28,7 +32,9 @@ const MovieCarousel = ({ topic, endpoint }: MovieCarouselProps) => {
         setLoading(false)
       }
     }
-    loadMovies()
+    if (endpoint) {
+      loadMovies()
+    }
   }, [endpoint])
 
 
@@ -36,30 +42,30 @@ const MovieCarousel = ({ topic, endpoint }: MovieCarouselProps) => {
 
     <View style={styles.listContainer}>
       <Text style={styles.title}>{topic}</Text>
-      {loading ? <ActivityIndicator size="small" />:
-      <FlatList
-        data={movies}
-        horizontal
-        keyExtractor={item => item.id.toString()}
-        renderItem={({ item }) => (
-          <>
-            <View style={styles.flexBox}>
-              <FastImage
-                source={{ uri: `https://image.tmdb.org/t/p/w200${item.poster_path}` }}
-                style={styles.image}
-              />
-              <View style={{ flex: 1 }}>
+      {loading ? <ActivityIndicator size="small" /> :
+        <FlatList
+          data={movies}
+          horizontal
+          keyExtractor={item => item.id.toString()}
+          renderItem={({ item }) => (
+            <>
+              <TouchableOpacity style={styles.flexBox} onPress={() => navigation?.navigate('MovieDetailScreen', { id: item.id })}>
+                <FastImage
+                  source={{ uri: `https://image.tmdb.org/t/p/w200${item.poster_path}` }}
+                  style={styles.image}
+                />
+                <View style={{ flex: 1 }}>
 
-                <Text numberOfLines={1} ellipsizeMode='tail' style={styles.movieTitle} >{(item.title)}</Text>
-              </View>
+                  <Text numberOfLines={1} ellipsizeMode='tail' style={styles.movieTitle} >{(item.title)}</Text>
+                </View>
 
-            </View>
+              </TouchableOpacity>
 
-          </>
-        )}
-        showsHorizontalScrollIndicator={false}
-      />
-}
+            </>
+          )}
+          showsHorizontalScrollIndicator={false}
+        />
+      }
     </View>
 
   )
