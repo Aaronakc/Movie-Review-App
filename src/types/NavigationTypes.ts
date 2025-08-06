@@ -17,8 +17,9 @@ export type NonAuthStackParamList = {
 };
 
 export type BottomTabParamList = {
-  BottomHome: undefined;     
-  Review: undefined; 
+  BottomHome: undefined;   
+  Search:undefined;  
+  Wishlist: undefined; 
   Profile: undefined;  
 };
 
