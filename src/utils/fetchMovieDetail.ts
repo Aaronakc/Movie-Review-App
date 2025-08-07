@@ -7,7 +7,7 @@ export const fetchMovieDetail = async (movie_id: string) => {
     const response = await axiosInstance.get(
       `/movie/${movie_id}?language=en-US`,
     );
-    // console.log('detail',response)
+  
   
     return response.data;
   } catch (error) {

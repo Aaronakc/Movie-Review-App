@@ -17,8 +17,8 @@ const SearchScreen = () => {
         if (res) {
           setResults(res)
         }
-      } 
-      else if(!search.trim()) {
+      }
+      else if (!search.trim()) {
         setResults([])
       }
     }
@@ -31,7 +31,7 @@ const SearchScreen = () => {
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       handleSearch();
-    }, 1000); 
+    }, 1000);
 
     return () => clearTimeout(timeoutId);
   }, [search]);
@@ -52,7 +52,7 @@ const SearchScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor:"#002335",
+    backgroundColor: "#002335",
 
   },
   input: {

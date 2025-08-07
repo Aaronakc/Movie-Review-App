@@ -8,7 +8,7 @@ export const searchMovie = async (keyword: string) => {
     const response = await axiosInstance.get(
       `/search/movie?query=${keyword}&include_adult=false&language=en-US&page=1`,
     );
-    console.log(response)
+    // console.log(response)
   
     return response.data.results;
   } catch (error) {

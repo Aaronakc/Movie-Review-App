@@ -1,17 +1,16 @@
-import { Text, StyleSheet, ImageBackground, Image, View, TouchableOpacity,ActivityIndicator } from 'react-native'
+import { Text, StyleSheet, ImageBackground, Image, View, TouchableOpacity, ActivityIndicator } from 'react-native'
 import React, { useState } from 'react'
 import InputElement from '../Components/InputElement'
 import ButtonElement from '../Components/ButtonElement'
 import { BlurView } from '@react-native-community/blur';
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { NonAuthStackParamList } from '../types/NavigationTypes'
+import { RootStackParamList } from '../types/NavigationTypes'
 import { createUserWithEmailAndPassword, getAuth, signOut } from '@react-native-firebase/auth';
 
 
-type Props = NativeStackScreenProps<NonAuthStackParamList, 'Signup'>;
+type Props = NativeStackScreenProps<RootStackParamList, 'Signup'>;
 
 const SignUpScreen = ({ navigation }: Props) => {
-  // const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -42,7 +41,7 @@ const SignUpScreen = ({ navigation }: Props) => {
     setErrorMessage('');
 
   }
-  // console.log("signed up screen reached")
+
 
 
   const validateSignUp = () => {
@@ -78,12 +77,12 @@ const SignUpScreen = ({ navigation }: Props) => {
     }
     setLoading(true)
     createUserWithEmailAndPassword(getAuth(), email, password)
-    
+
       .then(() => {
         console.log('User account created!');
-      
-         navigation.navigate('Login');
-        // getAuth().signOut();
+
+        navigation.navigate('Login');
+
       })
       .catch(error => {
         if (error.code === 'auth/email-already-in-use') {
@@ -116,13 +115,6 @@ const SignUpScreen = ({ navigation }: Props) => {
       </View>
 
       <View style={styles.signUpContainer}>
-        {/* <BlurView
-          style={styles.blurBackground}
-          blurType="light"
-          blurAmount={15}
-          reducedTransparencyFallbackColor="white"
-        /> */}
-
         <View style={styles.innerdarkLayer} />
         <Text style={styles.title}>Sign up</Text>
 
@@ -137,7 +129,6 @@ const SignUpScreen = ({ navigation }: Props) => {
             <Text style={styles.loginLink}>Login Page</Text>
           </TouchableOpacity>
         </View>
-        {/* </BlurView> */}
       </View>
     </ImageBackground >
   )
@@ -173,14 +164,13 @@ const styles = StyleSheet.create({
 
   signUpContainer: {
     width: 334,
-    // height:340,
     flexDirection: "column",
     alignItems: "flex-end",
     marginBottom: 20,
     marginLeft: 13,
     borderRadius: 40,
     paddingBottom: 30,
-    // backgroundColor: 'rgba(167, 166, 166, 0.85)',
+    backgroundColor: 'rgba(138, 138, 138, 0.85)',
     elevation: 12,
     position: 'relative',
     overflow: 'hidden',
@@ -210,7 +200,6 @@ const styles = StyleSheet.create({
 
   },
   font: {
-    // color: "white",
     color: '#c9c6c6ff',
     fontFamily: "OpenSans-SemiBold",
     lineHeight: 16,

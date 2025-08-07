@@ -4,10 +4,10 @@ import InputElement from '../Components/InputElement'
 import ButtonElement from '../Components/ButtonElement'
 import { BlurView } from '@react-native-community/blur';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { NonAuthStackParamList } from '../types/NavigationTypes';
+import { RootStackParamList } from '../types/NavigationTypes';
 import { getAuth, signInWithEmailAndPassword } from '@react-native-firebase/auth';
 
-type Props = NativeStackScreenProps<NonAuthStackParamList, 'Login'>;
+type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
 
 const LoginScreen = ({ navigation }: Props) => {
@@ -46,6 +46,7 @@ const LoginScreen = ({ navigation }: Props) => {
     setLoading(true);
     signInWithEmailAndPassword(getAuth(), email, password)
       .then(() => {
+        navigation.navigate('Home')
         console.log('User signed in!');
       })
       .catch(error => {
@@ -79,15 +80,7 @@ const LoginScreen = ({ navigation }: Props) => {
       </View>
 
       <View style={styles.loginContainer}>
-        {/* <BlurView blurType="dark" blurAmount={25}> */}
-        {/* <BlurView
-          style={styles.blurBackground}
-          blurType="light"
-          blurAmount={10}
-          reducedTransparencyFallbackColor="white"
-        /> */}
         <View style={styles.innerdarkLayer} />
-
         <Text style={styles.title}>Login</Text>
         <Text style={styles.font}>Please sign in to continue.</Text>
         <InputElement placeholder='Email' icon={require('../../assets/person.png')} backgroundColor='#acacac99' onChange={handleEmail} error={error} errorMessage={errorMessage} name="email" color="red" />
@@ -101,8 +94,6 @@ const LoginScreen = ({ navigation }: Props) => {
             first.
           </Text>
         </View>
-        {/* </BlurView> */}
-        {/* </BlurView> */}
       </View>
     </ImageBackground>
   )
