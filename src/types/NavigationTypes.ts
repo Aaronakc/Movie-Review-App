@@ -4,6 +4,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 export type AuthStackParamList = {
   Home: undefined;
+  MovieDetailScreen:{id:string};
 };
 
 
@@ -17,8 +18,9 @@ export type NonAuthStackParamList = {
 };
 
 export type BottomTabParamList = {
-  BottomHome: undefined;     
-  Review: undefined; 
+  BottomHome: undefined;   
+  Search:undefined;  
+  Wishlist: undefined; 
   Profile: undefined;  
 };
 

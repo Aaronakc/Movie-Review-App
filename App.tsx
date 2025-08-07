@@ -1,7 +1,5 @@
 import { NewAppScreen } from '@react-native/new-app-screen';
 import { ActivityIndicator, StatusBar, StyleSheet, Text, useColorScheme, View } from 'react-native';
-// import LoginScreen from './src/Screens/LoginScreen';
-// import SignUpScreen from './src/Screens/SignupScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import NonAuthStack from './src/navigation/NonAuthStack';
 import AuthStack from './src/navigation/AuthStack';
@@ -12,7 +10,7 @@ import { getAuth, onAuthStateChanged } from '@react-native-firebase/auth';
 function App() {
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState();
-  console.log("hello")
+
   function handleAuthStateChanged(user: any) {
     if (
       user && user.metadata && 
