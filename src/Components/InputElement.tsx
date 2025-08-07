@@ -24,9 +24,9 @@ const InputElement = ({ placeholder, icon, backgroundColor, onChange, value, err
         <TextInput style={styles.input} placeholder={placeholder} placeholderTextColor='#d3d1d1ff' onChangeText={(text) => onChange?.(text)} value={value} />
       </View>
       {
-        error == name ? <Text style={{ color: color}}>
+        error == name ? <Text style={{ color: color }}>
           {errorMessage}
-        </Text>:null
+        </Text> : null
       }
     </View>
   )
@@ -36,14 +36,12 @@ const styles = StyleSheet.create({
   container: {
     width: 300,
     marginBottom: 15,
-    // marginTop: 15,
     marginLeft: 17,
     marginRight: 17,
 
   },
   inputContainer: {
     flexDirection: "row",
-    // backgroundColor: "gray",
     borderRadius: 14,
     borderWidth: 0.2,
     borderColor: "white",
@@ -51,13 +49,10 @@ const styles = StyleSheet.create({
     gap: 5,
   },
   input: {
-    // borderWidth: 0.25,
     borderColor: "white",
     width: 300,
     height: 40,
     fontFamily: "serif",
-    // borderRadius: 14,
-
   },
   icon: {
     marginLeft: 20,

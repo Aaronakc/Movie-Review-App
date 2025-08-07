@@ -11,6 +11,9 @@ export const fetchMovies = async (endpoint: string | undefined) => {
   else if(endpoint=="favorite"){
     url=`account/${ACCOUNT_ID}/favorite/movies?language=en-US&page=1&sort_by=created_at.asc`
   }
+  else if(endpoint=='watchlist'){
+    url=`/account/${ACCOUNT_ID}/watchlist/movies?language=en-US&page=1&sort_by=created_at.asc`
+  }
 
 
   try {

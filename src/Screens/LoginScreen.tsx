@@ -94,8 +94,6 @@ const LoginScreen = ({ navigation }: Props) => {
             first.
           </Text>
         </View>
-        {/* </BlurView> */}
-        {/* </BlurView> */}
       </View>
     </ImageBackground>
   )

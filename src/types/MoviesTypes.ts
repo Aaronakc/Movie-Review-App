@@ -10,4 +10,7 @@ export interface MovieDetail{
   backdrop_path:string;
   overview:string;
   original_title:string;
+  status:string;
+  original_language:string;
+  popularity:string;
 };
