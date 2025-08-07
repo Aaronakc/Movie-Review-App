@@ -7,17 +7,13 @@ export type RootStackParamList = {
   MovieDetailScreen:{id:string};
   Login: undefined;
   Signup: undefined;
+  MovieReviewScreen:{id:string};
 };
 
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> =
   NativeStackScreenProps<RootStackParamList, T>;
 
-
-// export type NonAuthStackParamList = {
-//   Login: undefined;
-//   Signup: undefined;
-// };
 
 export type BottomTabParamList = {
   BottomHome: undefined;   

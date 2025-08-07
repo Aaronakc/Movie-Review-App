@@ -7,6 +7,7 @@ import ProfileScreen from '../Screens/ProfileScreen';
 import { BottomTabParamList} from '../types/NavigationTypes';
 import { Image, View } from 'react-native';
 import SearchScreen from '../Screens/SearchScreen';
+import WishListScreen from '../Screens/WishListScreen';
 
 
 const Tab = createBottomTabNavigator<BottomTabParamList>();
@@ -60,7 +61,7 @@ export default function BottomTab() {
 
       <Tab.Screen name="BottomHome" component={HomeScreen} options={{ headerShown: true, headerTitle: "Home", tabBarLabel: 'Home' }} />
       <Tab.Screen name="Search" component={SearchScreen} options={{ headerShown: true, headerTitle: "Search" }} />
-      <Tab.Screen name="Wishlist" component={MovieReviewScreen} options={{ headerShown: true, tabBarLabel: "Wishlist" }} />
+      <Tab.Screen name="Wishlist" component={WishListScreen} options={{ headerShown: true, tabBarLabel: "Wishlist" }} />
       <Tab.Screen name="Profile" component={ProfileScreen} options={{ headerShown: true, tabBarLabel: "Profile", }} />
 
     </Tab.Navigator>

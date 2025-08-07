@@ -7,6 +7,7 @@ import LoginScreen from '../Screens/LoginScreen';
 import SignUpScreen from '../Screens/SignupScreen';
 import { getAuth, onAuthStateChanged } from '@react-native-firebase/auth';
 import { ActivityIndicator, View } from 'react-native';
+import MovieReviewScreen from '../Screens/MovieReviewScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -38,6 +39,7 @@ const RootStack = () => {
     <Stack.Navigator initialRouteName={user ? "Home" : "Login"} screenOptions={{ animation: 'none' }}>
       <Stack.Screen name="Home" component={BottomTab} options={{ headerShown: false }} />
       <Stack.Screen name="MovieDetailScreen" component={MovieDetailScreen} options={{ headerShown: true }} />
+      <Stack.Screen name="MovieReviewScreen" component={MovieReviewScreen} options={{ headerShown: true }} />
       <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
       <Stack.Screen name="Signup" component={SignUpScreen} options={{ headerShown: false }} />
     </Stack.Navigator>

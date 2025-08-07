@@ -45,7 +45,7 @@ const LoginScreen = ({ navigation }: Props) => {
     }
     setLoading(true);
     signInWithEmailAndPassword(getAuth(), email, password)
-    .then(() => {
+      .then(() => {
         navigation.navigate('Home')
         console.log('User signed in!');
       })
@@ -80,15 +80,7 @@ const LoginScreen = ({ navigation }: Props) => {
       </View>
 
       <View style={styles.loginContainer}>
-        {/* <BlurView blurType="dark" blurAmount={25}> */}
-        {/* <BlurView
-          style={styles.blurBackground}
-          blurType="light"
-          blurAmount={10}
-          reducedTransparencyFallbackColor="white"
-        /> */}
         <View style={styles.innerdarkLayer} />
-
         <Text style={styles.title}>Login</Text>
         <Text style={styles.font}>Please sign in to continue.</Text>
         <InputElement placeholder='Email' icon={require('../../assets/person.png')} backgroundColor='#acacac99' onChange={handleEmail} error={error} errorMessage={errorMessage} name="email" color="red" />
