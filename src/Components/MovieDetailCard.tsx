@@ -1,4 +1,4 @@
-import { View, StyleSheet, Image, Text } from 'react-native';
+import { View, StyleSheet, Image, Text, ScrollView } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { AuthStackParamList, AuthStackScreenProps } from '../types/NavigationTypes';
 import { fetchMovieDetail } from '../utils/fetchMovieDetail';
@@ -36,13 +36,19 @@ const MovieDetailCard = ({ route }: MovieCardProps) => {
 
   }, [id])
   return (
-
-    <View style={styles.container}>
-      <View style={styles.imageContainer}>
-        <FastImage source={{ uri: `https://image.tmdb.org/t/p/w200${movie?.backdrop_path}` }} style={styles.image} resizeMode='cover' />
+    <ScrollView style={styles.mainContainer}>
+      <View style={styles.container}>
+        <View style={styles.imageContainer}>
+          <FastImage source={{ uri: `https://image.tmdb.org/t/p/w200${movie?.backdrop_path}` }} style={styles.image} resizeMode='cover' />
+        </View>
+        <FastImage source={{ uri: `https://image.tmdb.org/t/p/w200${movie?.poster_path}` }} style={styles.profileImage} resizeMode='contain' />
       </View>
-      <FastImage source={{ uri: `https://image.tmdb.org/t/p/w200${movie?.poster_path}` }} style={styles.profileImage} resizeMode='contain' />
-    </View>
+
+      <View style={styles.reviewContainer}>
+        <Text style={styles.reviewHeading}>Reviews</Text>
+      </View>
+
+    </ScrollView>
 
 
 
@@ -52,6 +58,10 @@ const MovieDetailCard = ({ route }: MovieCardProps) => {
 };
 
 const styles = StyleSheet.create({
+  mainContainer:{
+    flex:1,
+
+  },
   container: {
     borderRadius: 20,
     width: 334,
@@ -82,6 +92,16 @@ const styles = StyleSheet.create({
     height: 163,
     width: 106,
     borderRadius: 14
+  },
+  reviewContainer:{
+    marginLeft:20,
+    marginTop:10,
+
+  },
+  reviewHeading:{
+    color:"white",
+    fontSize:15,
+
   }
 
 
