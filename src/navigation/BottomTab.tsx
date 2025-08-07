@@ -4,7 +4,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from '../Screens/HomeScreen';
 import MovieReviewScreen from '../Screens/MovieReviewScreen';
 import ProfileScreen from '../Screens/ProfileScreen';
-import { BottomTabParamList, HomeTabScreenProps } from '../types/NavigationTypes';
+import { BottomTabParamList} from '../types/NavigationTypes';
 import { Image, View } from 'react-native';
 import SearchScreen from '../Screens/SearchScreen';
 
@@ -28,7 +28,7 @@ export default function BottomTab() {
               : require('../../assets/searchIcon.png');
           } else if (route.name === 'Wishlist') {
             iconSource = focused
-              ? require('../../assets/focusedBookMarkIcon.png')
+              ? require('../../assets/FocusedBookMarkIcon.png')
               : require('../../assets/bookmarkIcon.png');
           } else if (route.name === 'Profile') {
             iconSource = focused

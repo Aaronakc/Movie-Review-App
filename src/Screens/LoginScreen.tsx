@@ -4,10 +4,10 @@ import InputElement from '../Components/InputElement'
 import ButtonElement from '../Components/ButtonElement'
 import { BlurView } from '@react-native-community/blur';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { NonAuthStackParamList } from '../types/NavigationTypes';
+import { RootStackParamList } from '../types/NavigationTypes';
 import { getAuth, signInWithEmailAndPassword } from '@react-native-firebase/auth';
 
-type Props = NativeStackScreenProps<NonAuthStackParamList, 'Login'>;
+type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
 
 const LoginScreen = ({ navigation }: Props) => {
@@ -45,7 +45,8 @@ const LoginScreen = ({ navigation }: Props) => {
     }
     setLoading(true);
     signInWithEmailAndPassword(getAuth(), email, password)
-      .then(() => {
+    .then(() => {
+        navigation.navigate('Home')
         console.log('User signed in!');
       })
       .catch(error => {

@@ -4,11 +4,11 @@ import InputElement from '../Components/InputElement'
 import ButtonElement from '../Components/ButtonElement'
 import { BlurView } from '@react-native-community/blur';
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { NonAuthStackParamList } from '../types/NavigationTypes'
+import { RootStackParamList } from '../types/NavigationTypes'
 import { createUserWithEmailAndPassword, getAuth, signOut } from '@react-native-firebase/auth';
 
 
-type Props = NativeStackScreenProps<NonAuthStackParamList, 'Signup'>;
+type Props = NativeStackScreenProps<RootStackParamList, 'Signup'>;
 
 const SignUpScreen = ({ navigation }: Props) => {
   // const [username, setUsername] = useState('');

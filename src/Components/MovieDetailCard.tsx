@@ -1,13 +1,13 @@
 import { View, StyleSheet, Image, Text, ScrollView } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { AuthStackParamList, AuthStackScreenProps } from '../types/NavigationTypes';
+import {RootStackParamList } from '../types/NavigationTypes';
 import { fetchMovieDetail } from '../utils/fetchMovieDetail';
 import { MovieDetail } from '../types/MoviesTypes';
 import { RouteProp } from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 
 interface MovieCardProps {
-  route: RouteProp<AuthStackParamList, 'MovieDetailScreen'>;
+  route: RouteProp<RootStackParamList, 'MovieDetailScreen'>;
 
 
 }

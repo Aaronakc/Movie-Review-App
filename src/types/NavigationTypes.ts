@@ -2,20 +2,22 @@ import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
-export type AuthStackParamList = {
+export type RootStackParamList = {
   Home: undefined;
   MovieDetailScreen:{id:string};
-};
-
-
-export type AuthStackScreenProps<T extends keyof AuthStackParamList> =
-  NativeStackScreenProps<AuthStackParamList, T>;
-
-
-export type NonAuthStackParamList = {
   Login: undefined;
   Signup: undefined;
 };
+
+
+export type RootStackScreenProps<T extends keyof RootStackParamList> =
+  NativeStackScreenProps<RootStackParamList, T>;
+
+
+// export type NonAuthStackParamList = {
+//   Login: undefined;
+//   Signup: undefined;
+// };
 
 export type BottomTabParamList = {
   BottomHome: undefined;   
@@ -27,6 +29,6 @@ export type BottomTabParamList = {
   export type HomeTabScreenProps<T extends keyof BottomTabParamList> =
   CompositeScreenProps<
     BottomTabScreenProps<BottomTabParamList, T>,
-    AuthStackScreenProps<keyof AuthStackParamList>
+    RootStackScreenProps<keyof RootStackParamList>
   >;
 
