@@ -6,6 +6,7 @@ import { BlurView } from '@react-native-community/blur';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/NavigationTypes';
 import { getAuth, signInWithEmailAndPassword } from '@react-native-firebase/auth';
+import Toast from 'react-native-toast-message';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
@@ -35,6 +36,7 @@ const LoginScreen = ({ navigation }: Props) => {
 
   const handleLogin = () => {
     if (!email.trim() || !password.trim()) {
+      Toast.show({type:"error",text1:"All fields are required"})
       return;
     }
 
@@ -47,7 +49,7 @@ const LoginScreen = ({ navigation }: Props) => {
     signInWithEmailAndPassword(getAuth(), email, password)
       .then(() => {
         navigation.navigate('Home')
-        console.log('User signed in!');
+        Toast.show({type:"success",text1:"Logged in Successfully"})
       })
       .catch(error => {
         if (error.code === 'auth/email-already-in-use') {
