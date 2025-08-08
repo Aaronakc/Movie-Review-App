@@ -1,14 +1,14 @@
-import { View, Text, TextInput, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native'
+import { View, Text, TextInput, StyleSheet, ScrollView, Image, TouchableOpacity, ActivityIndicator } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import MovieCarousel from '../Components/MovieCarousel'
 import { searchMovie } from '../utils/FilterMovie'
 import IconTextRow from '../Components/IconTextRow'
 import { HomeTabScreenProps } from '../types/NavigationTypes'
+import Toast from 'react-native-toast-message'
 
 const SearchScreen = ({ navigation }: HomeTabScreenProps<'Search'>) => {
   const [search, setSearch] = useState('')
   const [results, setResults] = useState([])
-
 
   const handleSearch = async () => {
     try {
@@ -25,8 +25,11 @@ const SearchScreen = ({ navigation }: HomeTabScreenProps<'Search'>) => {
       }
     }
     catch (error) {
+      Toast.show({ type: "error", text1: 'Error!', text2: 'Something went wrong' })
+      console.log(error)
 
     }
+
   }
   // console.log(results)
 
@@ -37,6 +40,7 @@ const SearchScreen = ({ navigation }: HomeTabScreenProps<'Search'>) => {
 
     return () => clearTimeout(timeoutId);
   }, [search]);
+
 
   return (
     <ScrollView style={styles.container}>
@@ -97,6 +101,7 @@ const styles = StyleSheet.create({
     opacity: 0.8,
     marginHorizontal: 30,
     marginTop: 35,
+    marginBottom:7,
     borderRadius: 10,
     paddingLeft: 10,
     paddingRight: 50,

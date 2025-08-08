@@ -6,6 +6,7 @@ import { addReview } from '../utils/firestoreDatabase';
 import { fetchMovieDetail } from '../utils/fetchMovieDetail';
 import { MovieDetail } from '../types/MoviesTypes';
 import FastImage from 'react-native-fast-image';
+import Toast from 'react-native-toast-message';
 
 type MovieReviewRouteProp = RouteProp<RootStackParamList, 'MovieReviewScreen'>;
 const MovieReviewScreen = ({ navigation }: RootStackScreenProps<'MovieReviewScreen'>) => {
@@ -22,6 +23,7 @@ const MovieReviewScreen = ({ navigation }: RootStackScreenProps<'MovieReviewScre
       navigation.goBack()
     }
     catch (error) {
+      Toast.show({ type: "error", text1: "Error", text2: 'Something went wrong', visibilityTime: 1000 })
       console.log('error while adding comment', error)
     }
 
@@ -31,11 +33,11 @@ const MovieReviewScreen = ({ navigation }: RootStackScreenProps<'MovieReviewScre
     const loadMovieDetail = async () => {
       try {
         const movieData = await fetchMovieDetail(id)
-        // console.log('movie', movieData)
         setMovie(movieData)
       }
       catch (error) {
-        console.log(error)
+        Toast.show({ type: "error", text1: "Error", text2: 'Something went wrong', visibilityTime: 1000 })
+        console.log('error from loading movie',error)
 
       }
 

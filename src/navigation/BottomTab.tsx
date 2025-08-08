@@ -4,7 +4,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from '../Screens/HomeScreen';
 import MovieReviewScreen from '../Screens/MovieReviewScreen';
 import ProfileScreen from '../Screens/ProfileScreen';
-import { BottomTabParamList} from '../types/NavigationTypes';
+import { BottomTabParamList } from '../types/NavigationTypes';
 import { Image, View } from 'react-native';
 import SearchScreen from '../Screens/SearchScreen';
 import WishListScreen from '../Screens/WishListScreen';
@@ -59,10 +59,31 @@ export default function BottomTab() {
       })}
     >
 
-      <Tab.Screen name="BottomHome" component={HomeScreen} options={{ headerShown: true, headerTitle: "Home", tabBarLabel: 'Home' }} />
-      <Tab.Screen name="Search" component={SearchScreen} options={{ headerShown: true, headerTitle: "Search" }} />
-      <Tab.Screen name="Wishlist" component={WishListScreen} options={{ headerShown: true, tabBarLabel: "Wishlist" }} />
-      <Tab.Screen name="Profile" component={ProfileScreen} options={{ headerShown: true, tabBarLabel: "Profile", }} />
+      <Tab.Screen name="BottomHome" component={HomeScreen} options={{
+        headerShown: true,
+        headerTitle: "Home",
+        tabBarLabel: 'Home',
+        headerStyle: { backgroundColor: '#01293dff' },
+        headerTintColor: 'white',
+      }} />
+      <Tab.Screen name="Search" component={SearchScreen} options={{
+        headerShown: true,
+        headerTitle: "Search",
+        headerStyle: { backgroundColor: '#01293dff' },
+        headerTintColor: 'white',
+      }} />
+      <Tab.Screen name="Wishlist" component={WishListScreen} options={{
+        headerShown: true,
+        tabBarLabel: "Wishlist",
+        headerStyle: { backgroundColor: '#01293dff' },
+        headerTintColor: 'white',
+      }} />
+      <Tab.Screen name="Profile" component={ProfileScreen} options={{
+        headerShown: true,
+        tabBarLabel: "Profile",
+        headerStyle: { backgroundColor: '#01293dff' },
+        headerTintColor: 'white',
+      }} />
 
     </Tab.Navigator>
   );

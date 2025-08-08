@@ -5,32 +5,38 @@ import { fetchMovieDetail } from '../utils/fetchMovieDetail';
 import { MovieDetail } from '../types/MoviesTypes';
 import { RouteProp } from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
-import { getAllReviews } from '../utils/firestoreDatabase';
+import { addToWish, getAllReviews } from '../utils/firestoreDatabase';
 import { Review } from '../types/ReviewTypes';
+import Toast from 'react-native-toast-message';
+import Loader from './Loader';
 
 interface MovieCardProps {
   route: RouteProp<RootStackParamList, 'MovieDetailScreen'>;
   navigation?: RootStackScreenProps<'MovieDetailScreen'>["navigation"]
-
-
 }
 
 const MovieDetailCard = ({ route, navigation }: MovieCardProps) => {
   const [movie, setMovie] = useState<MovieDetail | null>(null);
   const [review, setReviews] = useState<Review[]>([])
+  const [loading, setLoading] = useState(false)
 
   const id = route.params?.id
 
   useEffect(() => {
     const loadMovieDetail = async () => {
+      setLoading(true)
       try {
         const movieData = await fetchMovieDetail(id)
         console.log('movie', movieData)
         setMovie(movieData)
       }
       catch (error) {
-        console.log(error)
+        Toast.show({ type: "error", text1: "Error", text2: 'Something went wrong', visibilityTime: 1000 })
+        console.log('error from movie detail',error)
 
+      }
+      finally {
+        setLoading(false)
       }
 
     }
@@ -39,6 +45,27 @@ const MovieDetailCard = ({ route, navigation }: MovieCardProps) => {
     }
 
   }, [id])
+
+  const addToWishList = async (id: string, poster_path: string) => {
+
+    try {
+      const response = await addToWish(id, poster_path)
+      if (response) {
+        navigation?.navigate('Home');
+        Toast.show({ type: "success", text1: "success", text2: "Wishlist Added!" })
+      }
+      else {
+        Toast.show({ type: "info", text1: "Information", text2: "Wishlist already exit!", visibilityTime: 1000 })
+
+      }
+    }
+    catch (error) {
+      Toast.show({ type: "error", text1: "error", text2: "Something went wrong", visibilityTime: 1000 })
+      console.log('error from wishlist',error)
+
+    }
+
+  }
 
 
   useEffect(() => {
@@ -49,7 +76,8 @@ const MovieDetailCard = ({ route, navigation }: MovieCardProps) => {
         setReviews(data)
       }
       catch (error) {
-        console.log("error fetching data", error)
+        Toast.show({ type: "error", text1: "Error", text2: 'Something went wrong', visibilityTime: 1000 })
+        console.log("error fetching data from review", error)
 
       }
     }
@@ -57,6 +85,11 @@ const MovieDetailCard = ({ route, navigation }: MovieCardProps) => {
 
 
   }, [])
+
+  if (loading) {
+    return <Loader />
+  }
+
   return (
     <ScrollView style={styles.mainContainer}>
 
@@ -68,9 +101,18 @@ const MovieDetailCard = ({ route, navigation }: MovieCardProps) => {
         <View style={styles.title}>
           <Text style={styles.titleText}>{movie?.original_title}</Text>
         </View>
-        <View>
+
+        <View style={{ flexDirection: "row", gap: 5 }}>
           <TouchableOpacity style={styles.button} onPress={() => navigation?.navigate('MovieReviewScreen', { id: id })}>
             <Text style={{ color: "white" }}>Add Review</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.button} onPress={() => {
+            if (movie?.id && movie?.poster_path) {
+              addToWishList(movie.id, movie.poster_path)
+            }
+          }}>
+            <Text style={{ color: "white" }}>Add to Fav</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -209,6 +251,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     paddingVertical: 10,
     alignItems: "center",
+    flex: 1,
   },
   commentSection: {
     width: 334,

@@ -38,8 +38,19 @@ const RootStack = () => {
   return (
     <Stack.Navigator initialRouteName={user ? "Home" : "Login"} screenOptions={{ animation: 'none' }}>
       <Stack.Screen name="Home" component={BottomTab} options={{ headerShown: false }} />
-      <Stack.Screen name="MovieDetailScreen" component={MovieDetailScreen} options={{ headerShown: true }} />
-      <Stack.Screen name="MovieReviewScreen" component={MovieReviewScreen} options={{ headerShown: true }} />
+      <Stack.Screen name="MovieDetailScreen" component={MovieDetailScreen} options={{
+        headerShown: true,
+        headerTitle: "Details",
+        headerStyle: { backgroundColor: '#01293dff' },
+        headerTintColor: 'white',
+      }} />
+      <Stack.Screen name="MovieReviewScreen" component={MovieReviewScreen} options={{
+        headerShown: true,
+        headerBackVisible: false,
+        headerTitle: "Review",
+        headerStyle: { backgroundColor: '#01293dff' },
+        headerTintColor: 'white',
+      }} />
       <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
       <Stack.Screen name="Signup" component={SignUpScreen} options={{ headerShown: false }} />
     </Stack.Navigator>
