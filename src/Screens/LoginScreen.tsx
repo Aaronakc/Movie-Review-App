@@ -36,7 +36,7 @@ const LoginScreen = ({ navigation }: Props) => {
 
   const handleLogin = () => {
     if (!email.trim() || !password.trim()) {
-      Toast.show({type:"error",text1:"All fields are required"})
+      Toast.show({ type: "error", text1: "All fields are required" })
       return;
     }
 
@@ -45,22 +45,22 @@ const LoginScreen = ({ navigation }: Props) => {
       setErrorMessage('Invalid Email Format');
       return;
     }
+
     setLoading(true);
     signInWithEmailAndPassword(getAuth(), email, password)
       .then(() => {
         navigation.navigate('Home')
-        Toast.show({type:"success",text1:"Logged in Successfully"})
+        Toast.show({ type: "success", text1: "Logged in Successfully" })
       })
       .catch(error => {
-        if (error.code === 'auth/email-already-in-use') {
-          console.log('That email address is already in use!');
-        }
 
         if (error.code === 'auth/invalid-email') {
+          Toast.show({ type: "error", text1: "Error", text2: 'email or password incorrect', visibilityTime: 1000 })
           console.log('That email address is invalid!');
         }
 
-        console.error(error);
+        Toast.show({ type: "error", text1: "Error", text2: 'Something went wrong', visibilityTime: 1000 })
+        console.log('error from login', error);
       }
       )
       .finally(() => setLoading(false))

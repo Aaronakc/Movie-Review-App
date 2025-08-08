@@ -89,14 +89,13 @@ const SignUpScreen = ({ navigation }: Props) => {
       })
       .catch(error => {
         if (error.code === 'auth/email-already-in-use') {
+          Toast.show({ type: "error", text1: "Error", text2: 'Email exist', visibilityTime: 1000 })
           console.log('That email address is already in use!');
         }
 
-        if (error.code === 'auth/invalid-email') {
-          console.log('That email address is invalid!');
-        }
 
-        console.error(error);
+        Toast.show({ type: "error", text1: "Error", text2: 'Something went wrong', visibilityTime: 1000 })
+        console.error('error from signup', error);
       })
       .finally(() => setLoading(false))
 

@@ -4,6 +4,7 @@ import { Movies } from '../types/MoviesTypes'
 import { fetchMovies } from '../utils/fetchApi';
 import FastImage from 'react-native-fast-image';
 import { HomeTabScreenProps } from '../types/NavigationTypes';
+import Toast from 'react-native-toast-message';
 
 interface MovieCarouselProps {
   topic?: string;
@@ -26,6 +27,7 @@ const MovieCarousel = ({ topic, endpoint, navigation, searchedMovies }: MovieCar
         setMovies(fetchedMovies)
         console.log(`Fetched ${topic}:`, fetchedMovies)
       } catch (error) {
+        Toast.show({ type: "error", text1: "Error", text2: 'Something went wrong', visibilityTime: 1000 })
         console.error(`Error fetching ${topic}:`, error)
       }
       finally {
