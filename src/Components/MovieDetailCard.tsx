@@ -5,10 +5,11 @@ import { fetchMovieDetail } from '../utils/fetchMovieDetail';
 import { MovieDetail } from '../types/MoviesTypes';
 import { RouteProp } from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
-import { addToWish, getAllReviews } from '../utils/firestoreDatabase';
+import { addToWish, deleteReview, getAllReviews } from '../utils/firestoreDatabase';
 import { Review } from '../types/ReviewTypes';
 import Toast from 'react-native-toast-message';
 import Loader from './Loader';
+import { getAuth } from '@react-native-firebase/auth';
 
 interface MovieCardProps {
   route: RouteProp<RootStackParamList, 'MovieDetailScreen'>;
@@ -32,7 +33,7 @@ const MovieDetailCard = ({ route, navigation }: MovieCardProps) => {
       }
       catch (error) {
         Toast.show({ type: "error", text1: "Error", text2: 'Something went wrong', visibilityTime: 1000 })
-        console.log('error from movie detail',error)
+        console.log('error from movie detail', error)
 
       }
       finally {
@@ -61,10 +62,27 @@ const MovieDetailCard = ({ route, navigation }: MovieCardProps) => {
     }
     catch (error) {
       Toast.show({ type: "error", text1: "error", text2: "Something went wrong", visibilityTime: 1000 })
-      console.log('error from wishlist',error)
+      console.log('error from wishlist', error)
 
     }
 
+  }
+
+
+
+
+  const handleDeleteComment = async (reviewId: string) => {
+    const response = await deleteReview(reviewId)
+    try {
+      if (response) {
+        setReviews(review => review.filter(r => r.id !== reviewId))
+        Toast.show({ type: "error", text1: "deleted successfully" })
+
+      }
+    }
+    catch (error) {
+      console.log('error while deleting comment', error)
+    }
   }
 
 
@@ -133,6 +151,12 @@ const MovieDetailCard = ({ route, navigation }: MovieCardProps) => {
                 Review by <Text style={{ color: '#FFB703' }}>{item.username}</Text>
               </Text>
               <Text style={styles.commentText}>{item.comment}</Text>
+              {item.userId === getAuth().currentUser?.uid &&
+                <>
+
+                  <Text onPress={() => handleDeleteComment(item.id)}>delete</Text>
+                </>
+              }
             </View>
           ))
         ) : (

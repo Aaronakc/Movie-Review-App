@@ -1,7 +1,7 @@
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import { Review } from '../types/ReviewTypes';
-import Toast from 'react-native-toast-message';
+
 
 export const addReview = async (movieId: string, comment: string) => {
   const user = auth().currentUser;
@@ -45,6 +45,29 @@ export const getAllReviews = async (movieId:string) => {
     throw error;
   }
 };
+
+
+export const deleteReview=async(reviewId:string)=>{
+  const user=auth().currentUser;
+  if(!user) throw Error('User not logged in')
+
+  try{
+    const reviewDoc=await firestore().collection('reviews').doc(reviewId).get()
+    if(!reviewDoc.exists) throw new Error("review not found")
+    if(reviewDoc.data()?.userId !== user.uid) throw new Error('not authorized')
+
+
+    await firestore().collection('reviews').doc(reviewId).delete()
+    return true;
+
+  }
+  catch(error){
+    console.log('error deleting review',error)
+    throw error;
+
+  }
+
+}
 
 export const addToWish=async(movieId:string,img_path:string)=>{
   const user = auth().currentUser;
