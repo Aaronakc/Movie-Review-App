@@ -6,6 +6,7 @@ import { BlurView } from '@react-native-community/blur';
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../types/NavigationTypes'
 import { createUserWithEmailAndPassword, getAuth, signOut } from '@react-native-firebase/auth';
+import Toast from 'react-native-toast-message';
 
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Signup'>;
@@ -46,6 +47,7 @@ const SignUpScreen = ({ navigation }: Props) => {
 
   const validateSignUp = () => {
     if (!email.trim() || !password.trim() || !confirmPassword.trim()) {
+      Toast.show({ type: "error", text1: "All fields are required" })
       return false;
 
     }
@@ -79,8 +81,9 @@ const SignUpScreen = ({ navigation }: Props) => {
     createUserWithEmailAndPassword(getAuth(), email, password)
 
       .then(() => {
-        console.log('User account created!');
 
+
+        Toast.show({ type: "success", text1: "Account Created Succesfuly!" })
         navigation.navigate('Login');
 
       })

@@ -4,6 +4,7 @@ import { getAuth, signOut } from '@react-native-firebase/auth'
 import { HomeTabScreenProps } from '../types/NavigationTypes'
 import ProfileCard from '../Components/ProfileCard'
 import MovieCarousel from '../Components/MovieCarousel'
+import Toast from 'react-native-toast-message'
 
 const ProfileScreen = ({ navigation }: HomeTabScreenProps<'Profile'>) => {
   const user = getAuth().currentUser;
@@ -14,6 +15,7 @@ const ProfileScreen = ({ navigation }: HomeTabScreenProps<'Profile'>) => {
   const handleLogout = () => {
     signOut(getAuth())
     navigation.navigate('Login')
+    Toast.show({ type: "success", text1: "Logged out Successfully!!" })
   }
   return (
     <ScrollView style={styles.container}>
