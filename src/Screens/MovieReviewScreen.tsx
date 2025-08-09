@@ -12,15 +12,18 @@ type MovieReviewRouteProp = RouteProp<RootStackParamList, 'MovieReviewScreen'>;
 const MovieReviewScreen = ({ navigation }: RootStackScreenProps<'MovieReviewScreen'>) => {
   const [comment, setComment] = useState('');
   const [movie, setMovie] = useState<MovieDetail | null>(null);
+ 
 
   const route = useRoute<MovieReviewRouteProp>();
   const id = route.params?.id
+
 
 
   const handleSubmit = async () => {
     try {
       await addReview(id, comment)
       navigation.goBack()
+      
     }
     catch (error) {
       Toast.show({ type: "error", text1: "Error", text2: 'Something went wrong', visibilityTime: 1000 })
@@ -37,7 +40,7 @@ const MovieReviewScreen = ({ navigation }: RootStackScreenProps<'MovieReviewScre
       }
       catch (error) {
         Toast.show({ type: "error", text1: "Error", text2: 'Something went wrong', visibilityTime: 1000 })
-        console.log('error from loading movie',error)
+        console.log('error from loading movie', error)
 
       }
 

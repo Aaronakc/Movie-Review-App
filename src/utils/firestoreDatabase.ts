@@ -69,6 +69,34 @@ export const deleteReview=async(reviewId:string)=>{
 
 }
 
+
+export const updateReview=async(reviewId:string,newComment:string)=>{
+  const user=auth().currentUser;
+  if(!user) throw new Error('user not logged in');
+
+  try{
+    const reviewDoc=await firestore().collection('reviews').doc(reviewId).get()
+
+    if(!reviewDoc.exists) throw new Error("Review not found");
+
+    if(reviewDoc.data()?.userId != user.uid) throw new Error('not authorized')
+
+    await firestore().collection('reviews').doc(reviewId).update({
+      comment:newComment,
+      updatedAt:firestore.FieldValue.serverTimestamp()
+
+    })
+    return true
+
+  }
+  catch(error){
+    console.log("error updating review",error)
+    throw error
+
+  }
+
+}
+
 export const addToWish=async(movieId:string,img_path:string)=>{
   const user = auth().currentUser;
   
