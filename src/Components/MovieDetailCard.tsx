@@ -1,14 +1,15 @@
-import { View, StyleSheet, Image, Text, ScrollView, TouchableOpacity, FlatList } from 'react-native';
+import { View, StyleSheet, Image, Text, ScrollView, TouchableOpacity, FlatList, TextInput } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { HomeTabScreenProps, RootStackParamList, RootStackScreenProps } from '../types/NavigationTypes';
 import { fetchMovieDetail } from '../utils/fetchMovieDetail';
 import { MovieDetail } from '../types/MoviesTypes';
 import { RouteProp } from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
-import { addToWish, getAllReviews } from '../utils/firestoreDatabase';
+import { addToWish, deleteReview, getAllReviews, updateReview } from '../utils/firestoreDatabase';
 import { Review } from '../types/ReviewTypes';
 import Toast from 'react-native-toast-message';
 import Loader from './Loader';
+import { getAuth } from '@react-native-firebase/auth';
 
 interface MovieCardProps {
   route: RouteProp<RootStackParamList, 'MovieDetailScreen'>;
@@ -19,6 +20,10 @@ const MovieDetailCard = ({ route, navigation }: MovieCardProps) => {
   const [movie, setMovie] = useState<MovieDetail | null>(null);
   const [review, setReviews] = useState<Review[]>([])
   const [loading, setLoading] = useState(false)
+  const [editId, setEditId] = useState('')
+  const [editedText, setEditedText] = useState('')
+  const [reload, setReload] = useState(false)
+
 
   const id = route.params?.id
 
@@ -32,7 +37,7 @@ const MovieDetailCard = ({ route, navigation }: MovieCardProps) => {
       }
       catch (error) {
         Toast.show({ type: "error", text1: "Error", text2: 'Something went wrong', visibilityTime: 1000 })
-        console.log('error from movie detail',error)
+        console.log('error from movie detail', error)
 
       }
       finally {
@@ -61,8 +66,41 @@ const MovieDetailCard = ({ route, navigation }: MovieCardProps) => {
     }
     catch (error) {
       Toast.show({ type: "error", text1: "error", text2: "Something went wrong", visibilityTime: 1000 })
-      console.log('error from wishlist',error)
+      console.log('error from wishlist', error)
 
+    }
+
+  }
+
+
+
+
+  const handleDeleteComment = async (reviewId: string) => {
+    const response = await deleteReview(reviewId)
+    try {
+      if (response) {
+        setReviews(review => review.filter(r => r.id !== reviewId))
+        Toast.show({ type: "error", text1: "deleted successfully", visibilityTime: 1000 })
+
+      }
+    }
+    catch (error) {
+      console.log('error while deleting comment', error)
+    }
+  }
+
+  const handleEditComment = (reviewId: string, newComment: string) => {
+    setEditId(reviewId)
+    setEditedText(newComment)
+  }
+
+  const handleSaveComment = async () => {
+    const response = await updateReview(editId, editedText)
+    if (response) {
+      setEditId('')
+      setEditedText('')
+      setReload(!reload)
+      Toast.show({ type: "success", text1: "Review edited succesfully", visibilityTime: 1000 })
     }
 
   }
@@ -72,7 +110,7 @@ const MovieDetailCard = ({ route, navigation }: MovieCardProps) => {
     const loadReviews = async () => {
       try {
         const data = await getAllReviews(id)
-        console.log('data', data)
+        // console.log('data', data)
         setReviews(data)
       }
       catch (error) {
@@ -84,7 +122,7 @@ const MovieDetailCard = ({ route, navigation }: MovieCardProps) => {
     loadReviews()
 
 
-  }, [])
+  }, [reload])
 
   if (loading) {
     return <Loader />
@@ -132,7 +170,38 @@ const MovieDetailCard = ({ route, navigation }: MovieCardProps) => {
               <Text style={styles.commentText}>
                 Review by <Text style={{ color: '#FFB703' }}>{item.username}</Text>
               </Text>
-              <Text style={styles.commentText}>{item.comment}</Text>
+
+              <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                {editId == item.id ? <TextInput value={editedText} onChangeText={(text) => setEditedText(text)} style={styles.input} /> :
+                  <>
+                    <View style={{}}>
+                      <Text style={styles.commentText}>{item.comment}</Text>
+                    </View>
+                  </>
+                }
+                {item.userId === getAuth().currentUser?.uid &&
+                  <>
+                    <View style={styles.iconFlexBox}>
+                      {
+                        editId == item.id ?
+                          <>
+                            <TouchableOpacity onPress={() => handleSaveComment()}>
+                              <Text style={{ color: "white" }}>save</Text>
+                            </TouchableOpacity>
+                          </>
+                          :
+                          <TouchableOpacity onPress={() => handleEditComment(item.id, item.comment)}>
+                            <Image source={require('../../assets/editIcon.png')} style={styles.iconImage} />
+                          </TouchableOpacity>
+                      }
+                      <TouchableOpacity onPress={() => handleDeleteComment(item.id)}>
+                        <Image source={require('../../assets/deleteIcon.png')} style={styles.iconImage} />
+                      </TouchableOpacity>
+
+                    </View>
+                  </>
+                }
+              </View>
             </View>
           ))
         ) : (
@@ -275,6 +344,26 @@ const styles = StyleSheet.create({
     color: 'white',
     textAlign: 'center',
     marginTop: 10
+  },
+  iconImage: {
+    width: 15,
+    height: 15,
+  },
+  iconFlexBox: {
+    flexDirection: "row",
+    gap: 10,
+    alignItems: "center",
+
+  },
+  input: {
+    borderWidth: 0.1,
+    borderColor: "white",
+    flex: 1,
+    marginTop: 3,
+    paddingLeft: 10,
+    paddingRight: 20,
+    marginRight: 3,
+    borderRadius: 20,
   }
 
 
