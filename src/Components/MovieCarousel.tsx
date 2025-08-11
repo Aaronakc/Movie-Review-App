@@ -1,14 +1,17 @@
 import { View, Text, FlatList, Image, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { Movies } from '../types/MoviesTypes'
+import { Endpoint, Movies, MoviesPayload } from '../types/MoviesTypes'
 import { fetchMovies } from '../utils/fetchApi';
 import FastImage from 'react-native-fast-image';
 import { HomeTabScreenProps } from '../types/NavigationTypes';
 import Toast from 'react-native-toast-message';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { getMovies } from '../redux/asyncActions';
+
 
 interface MovieCarouselProps {
   topic?: string;
-  endpoint?: string;
+  endpoint?: Endpoint;
   navigation?: HomeTabScreenProps<'BottomHome'>["navigation"]
   searchedMovies?: Movies[]
 }
@@ -16,27 +19,48 @@ interface MovieCarouselProps {
 
 const MovieCarousel = ({ topic, endpoint, navigation, searchedMovies }: MovieCarouselProps) => {
 
-  const [movies, setMovies] = useState<Movies[]>(searchedMovies && searchedMovies.length > 0 ? searchedMovies : [])
-  const [loading, setLoading] = useState(false);
+  // const [movies, setMovies] = useState<Movies[]>(searchedMovies && searchedMovies.length > 0 ? searchedMovies : [])
+  // const [loading, setLoading] = useState(false);
+  const { movies, loading, error } = useAppSelector(state => state.movie)
+  const categorizedMovie = endpoint ? movies[endpoint] : []
+  const dispatch = useAppDispatch()
+
+  console.log(movies)
 
   useEffect(() => {
     const loadMovies = async () => {
-      setLoading(true)
       try {
-        const fetchedMovies = await fetchMovies(endpoint)
-        setMovies(fetchedMovies)
-        console.log(`Fetched ${topic}:`, fetchedMovies)
-      } catch (error) {
-        Toast.show({ type: "error", text1: "Error", text2: 'Something went wrong', visibilityTime: 1000 })
-        console.error(`Error fetching ${topic}:`, error)
+        if (endpoint) {
+          await dispatch(getMovies(endpoint))
+        }
+
       }
-      finally {
-        setLoading(false)
+      catch (error) {
+        console.log(error)
+
       }
+
+      //   setLoading(true)
+      //   try {
+      //     const fetchedMovies = await fetchMovies(endpoint)
+      //     setMovies(fetchedMovies)
+      //     console.log(`Fetched ${topic}:`, fetchedMovies)
+      //   } catch (error) {
+      //     Toast.show({ type: "error", text1: "Error", text2: 'Something went wrong', visibilityTime: 1000 })
+      //     console.error(`Error fetching ${topic}:`, error)
+      //   }
+      //   finally {
+      //     setLoading(false)
+      //   }
+      // }
+      // if (endpoint) {
+      //   loadMovies()
+      // }
     }
     if (endpoint) {
       loadMovies()
     }
+
   }, [endpoint])
 
 
@@ -45,13 +69,13 @@ const MovieCarousel = ({ topic, endpoint, navigation, searchedMovies }: MovieCar
     <View style={styles.listContainer}>
       <Text style={styles.title}>{topic}</Text>
       {loading ? <ActivityIndicator size="small" /> :
-        <FlatList
-          data={movies}
+        categorizedMovie.length > 0 && <FlatList
+          data={categorizedMovie}
           horizontal
           keyExtractor={item => item.id.toString()}
           renderItem={({ item }) => (
             <>
-              <TouchableOpacity style={styles.flexBox} onPress={() => navigation?.navigate('MovieDetailScreen', { id: item.id })}>
+              <TouchableOpacity style={styles.flexBox} onPress={() => navigation?.navigate('MovieDetailScreen', { endpoint,id: item.id })}>
                 <FastImage
                   source={{ uri: `https://image.tmdb.org/t/p/w200${item.poster_path}` }}
                   style={styles.image}

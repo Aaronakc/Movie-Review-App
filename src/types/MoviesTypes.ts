@@ -14,3 +14,15 @@ export interface MovieDetail{
   original_language:string;
   popularity:string;
 };
+
+export interface MoviesPayload {
+  now_playing?: MovieDetail[];
+  popular?: MovieDetail[];
+  top_rated?: MovieDetail[];
+  upcoming?: MovieDetail[];
+  trending?:MovieDetail[];
+  watchlist?:MovieDetail[];
+  favorite?:MovieDetail[];
+}
+
+export type Endpoint = 'now_playing' | 'popular' | 'top_rated' | 'upcoming' | 'trending'|'watchlist' |'favorite'
