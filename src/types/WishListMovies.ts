@@ -6,3 +6,8 @@ export interface WishListMoviesFireStore{
   movieId:string;
   imgLink:string;
 }
+
+export interface AddWishPayload{
+  movieId: string;
+  img_path: string;
+}

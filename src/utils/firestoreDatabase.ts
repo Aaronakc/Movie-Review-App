@@ -106,7 +106,7 @@ export const addToWish=async(movieId:string,img_path:string)=>{
   const uid=user.uid
 
   try{
-    const wishListRef=await firestore().collection('users').doc(uid).collection('wishlist')
+    const wishListRef=firestore().collection('users').doc(uid).collection('wishlist')
     const existing = await wishListRef.where('movieId', '==', movieId).get();
       if(!existing.empty){
         return false;

@@ -1,10 +1,11 @@
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { Endpoint } from "./MoviesTypes";
 
 export type RootStackParamList = {
   Home: undefined;
-  MovieDetailScreen:{id:string};
+  MovieDetailScreen:{endpoint?:Endpoint,id:string};
   Login: undefined;
   Signup: undefined;
   MovieReviewScreen:{id:string};

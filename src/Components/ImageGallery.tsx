@@ -4,36 +4,43 @@ import { WishListMoviesFireStore } from '../types/WishListMovies';
 import Toast from 'react-native-toast-message';
 import { getAllWishLists } from '../utils/firestoreDatabase';
 import Loader from './Loader';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { fetchWishListMovies } from '../redux/asyncActions';
 
 
 
 const ImageGallery = () => {
 
-  const [wishlistMovies, setWishListMovies] = useState<WishListMoviesFireStore[]>([])
-  const [loading, setLoading] = useState<boolean>(false)
+  // const [wishlistMovies, setWishListMovies] = useState<WishListMoviesFireStore[]>([])
+  // const [loading, setLoading] = useState<boolean>(false)
+
+  const {wishlistmovies,loading}=useAppSelector(state=>state.wishlist)
+  const dispatch=useAppDispatch()
 
   useEffect(() => {
     const loadWishList = async () => {
-      setLoading(true)
-      try {
-        const movies = await getAllWishLists();
-        if (movies) {
-          setWishListMovies(movies)
+       await dispatch(fetchWishListMovies())
+      
+      // setLoading(true)
+      // try {
+      //   const movies = await getAllWishLists();
+      //   if (movies) {
+      //     setWishListMovies(movies)
 
-        }
-      }
-      catch (error) {
-        Toast.show({ type: "error", text1: "Error", text2:'Something went wrong', visibilityTime: 1000 })
-        console.log('error from loading wish',error)
-      }
-      finally {
-        setLoading(false)
+      //   }
+      // }
+      // catch (error) {
+      //   Toast.show({ type: "error", text1: "Error", text2: 'Something went wrong', visibilityTime: 1000 })
+      //   console.log('error from loading wish', error)
+      // }
+      // finally {
+      //   setLoading(false)
 
-      }
+      // }
     }
     loadWishList()
 
-  }, [])
+}, [])
 
   if (loading) {
     return <Loader />
@@ -44,7 +51,7 @@ const ImageGallery = () => {
 
       <FlatList
         style={styles.flatlistContainer}
-        data={wishlistMovies}
+        data={wishlistmovies}
         numColumns={4}
         renderItem={({ item }) => <Image source={{ uri: item?.imgLink }} style={styles.image} />}
         keyExtractor={item => item?.movieId.toString()}

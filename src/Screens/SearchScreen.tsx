@@ -7,44 +7,44 @@ import { HomeTabScreenProps } from '../types/NavigationTypes'
 import Toast from 'react-native-toast-message'
 
 const SearchScreen = ({ navigation }: HomeTabScreenProps<'Search'>) => {
-  const [search, setSearch] = useState('')
-  const [results, setResults] = useState([])
+  // const [search, setSearch] = useState('')
+  // const [results, setResults] = useState([])
 
-  const handleSearch = async () => {
-    try {
+  // const handleSearch = async () => {
+  //   try {
 
-      if (search) {
-        const res = await searchMovie(search)
-        // console.log(res)
-        if (res) {
-          setResults(res)
-        }
-      }
-      else if (!search.trim()) {
-        setResults([])
-      }
-    }
-    catch (error) {
-      Toast.show({ type: "error", text1: 'Error!', text2: 'Something went wrong' })
-      console.log(error)
+  //     if (search) {
+  //       const res = await searchMovie(search)
+  //       // console.log(res)
+  //       if (res) {
+  //         setResults(res)
+  //       }
+  //     }
+  //     else if (!search.trim()) {
+  //       setResults([])
+  //     }
+  //   }
+  //   catch (error) {
+  //     Toast.show({ type: "error", text1: 'Error!', text2: 'Something went wrong' })
+  //     console.log(error)
 
-    }
+  //   }
 
-  }
+  // }
   // console.log(results)
 
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      handleSearch();
-    }, 1000);
+  // useEffect(() => {
+  //   const timeoutId = setTimeout(() => {
+  //     handleSearch();
+  //   }, 1000);
 
-    return () => clearTimeout(timeoutId);
-  }, [search]);
+  //   return () => clearTimeout(timeoutId);
+  // }, [search]);
 
 
   return (
     <ScrollView style={styles.container}>
-      <View>
+      {/* <View>
         <TextInput style={styles.input} placeholder="Search.." placeholderTextColor={"white"} onChangeText={(text) => setSearch(text)} />
         {
           results.length > 0
@@ -52,7 +52,7 @@ const SearchScreen = ({ navigation }: HomeTabScreenProps<'Search'>) => {
           <MovieCarousel topic="Search" searchedMovies={results} />
         }
 
-      </View>
+      </View> */}
       <Image source={require('../../assets/searchIcon.png')} style={styles.searchIcon} />
 
 
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
     opacity: 0.8,
     marginHorizontal: 30,
     marginTop: 35,
-    marginBottom:7,
+    marginBottom: 7,
     borderRadius: 10,
     paddingLeft: 10,
     paddingRight: 50,

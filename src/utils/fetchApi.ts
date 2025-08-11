@@ -1,8 +1,9 @@
+import { MoviesPayload } from "../types/MoviesTypes";
 import axiosInstance from "./axiosInstance";
 import { ACCOUNT_ID } from "./token";
 
 
-export const fetchMovies = async (endpoint: string | undefined) => {
+export const fetchMovies = async (endpoint: string) => {
   let url = `movie/${endpoint}?language=en-US&page=1`
 
   if(endpoint == "trending") {
@@ -20,10 +21,14 @@ export const fetchMovies = async (endpoint: string | undefined) => {
     const response = await axiosInstance.get(
       url
     );
-  
-    return response.data.results;
+    console.log(response)
+
+    return {
+      [endpoint]: response.data.results 
+    } as MoviesPayload
+    
   } catch (error) {
     console.error(`Error fetching ${endpoint}:`, error);
-    return [];
+    return {};
   }
 };
