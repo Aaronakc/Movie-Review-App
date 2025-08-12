@@ -7,49 +7,54 @@ import { fetchMovieDetail } from '../utils/fetchMovieDetail';
 import { MovieDetail } from '../types/MoviesTypes';
 import FastImage from 'react-native-fast-image';
 import Toast from 'react-native-toast-message';
+import { addToReview } from '../redux/asyncActions';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import auth from '@react-native-firebase/auth';
 
 type MovieReviewRouteProp = RouteProp<RootStackParamList, 'MovieReviewScreen'>;
 const MovieReviewScreen = ({ navigation }: RootStackScreenProps<'MovieReviewScreen'>) => {
   const [comment, setComment] = useState('');
-  const [movie, setMovie] = useState<MovieDetail | null>(null);
- 
+  // const [movie, setMovie] = useState<MovieDetail | null>(null);
+
 
   const route = useRoute<MovieReviewRouteProp>();
   const id = route.params?.id
+  let endpoint = route.params ? route.params.endpoint : "now_playing"
+  let movie: MovieDetail | undefined;
+  const { movies } = useAppSelector(state => state.movie)
+
+  if (endpoint && id) {
+    let categorizedMovies = endpoint && movies[endpoint]
+    let item = categorizedMovies.find(movie => movie.id == id)
+
+    if (item) {
+      movie = item
+    }
+  }
+
+
+  const dispatch = useAppDispatch()
 
 
 
   const handleSubmit = async () => {
     try {
-      await addReview(id, comment)
-      navigation.goBack()
-      
+      const response = await dispatch(addToReview({ movieId: id, comment }))
+      // console.log('payload',response.payload)
+
+      if (response.payload && response.payload !== false) {
+        navigation.goBack()
+        Toast.show({ type: "success", text1: "success", text2: "Review Added!" })
+      }
     }
     catch (error) {
-      Toast.show({ type: "error", text1: "Error", text2: 'Something went wrong', visibilityTime: 1000 })
-      console.log('error while adding comment', error)
+      console.log(error)
+      Toast.show({ type: "error", text1: "Error", text2: "Something went wrong" })
     }
 
   }
 
-  useEffect(() => {
-    const loadMovieDetail = async () => {
-      try {
-        const movieData = await fetchMovieDetail(id)
-        setMovie(movieData)
-      }
-      catch (error) {
-        Toast.show({ type: "error", text1: "Error", text2: 'Something went wrong', visibilityTime: 1000 })
-        console.log('error from loading movie', error)
 
-      }
-
-    }
-    if (id) {
-      loadMovieDetail()
-    }
-
-  }, [id])
   return (
     <View style={styles.container}>
       <View style={styles.innerWrapper}>

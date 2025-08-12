@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Endpoint, Movies, MoviesPayload } from '../types/MoviesTypes'
 import { fetchMovies } from '../utils/fetchApi';
 import FastImage from 'react-native-fast-image';
-import { HomeTabScreenProps } from '../types/NavigationTypes';
+import { BottomTabParamList, HomeTabScreenProps } from '../types/NavigationTypes';
 import Toast from 'react-native-toast-message';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { getMovies } from '../redux/asyncActions';
@@ -12,50 +12,34 @@ import { getMovies } from '../redux/asyncActions';
 interface MovieCarouselProps {
   topic?: string;
   endpoint?: Endpoint;
-  navigation?: HomeTabScreenProps<'BottomHome'>["navigation"]
+  navigation?: HomeTabScreenProps<keyof BottomTabParamList>["navigation"] 
+  
   searchedMovies?: Movies[]
 }
 
 
 const MovieCarousel = ({ topic, endpoint, navigation, searchedMovies }: MovieCarouselProps) => {
-
-  // const [movies, setMovies] = useState<Movies[]>(searchedMovies && searchedMovies.length > 0 ? searchedMovies : [])
-  // const [loading, setLoading] = useState(false);
-  const { movies, loading, error } = useAppSelector(state => state.movie)
+  const { movies, loading} = useAppSelector(state => state.movie)
   const categorizedMovie = endpoint ? movies[endpoint] : []
   const dispatch = useAppDispatch()
 
-  console.log(movies)
+  // console.log(movies)
 
   useEffect(() => {
     const loadMovies = async () => {
       try {
         if (endpoint) {
+          if(movies[endpoint].length > 0) {
+            return;
+          }
           await dispatch(getMovies(endpoint))
         }
 
       }
       catch (error) {
         console.log(error)
-
+        Toast.show({ type: "error", text1: "Error", text2: "Something went wrong!", visibilityTime: 1000 })
       }
-
-      //   setLoading(true)
-      //   try {
-      //     const fetchedMovies = await fetchMovies(endpoint)
-      //     setMovies(fetchedMovies)
-      //     console.log(`Fetched ${topic}:`, fetchedMovies)
-      //   } catch (error) {
-      //     Toast.show({ type: "error", text1: "Error", text2: 'Something went wrong', visibilityTime: 1000 })
-      //     console.error(`Error fetching ${topic}:`, error)
-      //   }
-      //   finally {
-      //     setLoading(false)
-      //   }
-      // }
-      // if (endpoint) {
-      //   loadMovies()
-      // }
     }
     if (endpoint) {
       loadMovies()

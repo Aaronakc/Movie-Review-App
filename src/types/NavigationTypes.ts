@@ -8,7 +8,7 @@ export type RootStackParamList = {
   MovieDetailScreen:{endpoint?:Endpoint,id:string};
   Login: undefined;
   Signup: undefined;
-  MovieReviewScreen:{id:string};
+  MovieReviewScreen:{endpoint?:Endpoint,id:string};
 };
 
 

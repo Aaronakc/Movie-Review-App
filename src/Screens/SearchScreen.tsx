@@ -5,59 +5,60 @@ import { searchMovie } from '../utils/FilterMovie'
 import IconTextRow from '../Components/IconTextRow'
 import { HomeTabScreenProps } from '../types/NavigationTypes'
 import Toast from 'react-native-toast-message'
+import SearchMovie from '../Components/SearchMovie'
 
 const SearchScreen = ({ navigation }: HomeTabScreenProps<'Search'>) => {
-  // const [search, setSearch] = useState('')
-  // const [results, setResults] = useState([])
+  const [search, setSearch] = useState('')
+  const [results, setResults] = useState([])
+  const [loading, setLoading] = useState(false)
 
-  // const handleSearch = async () => {
-  //   try {
+  const handleSearch = async () => {
+    try {
 
-  //     if (search) {
-  //       const res = await searchMovie(search)
-  //       // console.log(res)
-  //       if (res) {
-  //         setResults(res)
-  //       }
-  //     }
-  //     else if (!search.trim()) {
-  //       setResults([])
-  //     }
-  //   }
-  //   catch (error) {
-  //     Toast.show({ type: "error", text1: 'Error!', text2: 'Something went wrong' })
-  //     console.log(error)
+      if (search) {
+        setLoading(true)
+        const res = await searchMovie(search)
+        if (res) {
+          setResults(res)
+        }
+      }
+      else if (!search.trim()) {
+        setResults([])
+      }
+    }
+    catch (error) {
+      Toast.show({ type: "error", text1: 'Error!', text2: 'Something went wrong' })
+      console.log(error)
+    } finally {
+      setLoading(false)
+    }
 
-  //   }
+  }
+  console.log(results)
 
-  // }
-  // console.log(results)
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      handleSearch();
+    }, 1000);
 
-  // useEffect(() => {
-  //   const timeoutId = setTimeout(() => {
-  //     handleSearch();
-  //   }, 1000);
-
-  //   return () => clearTimeout(timeoutId);
-  // }, [search]);
+    return () => clearTimeout(timeoutId);
+  }, [search]);
 
 
   return (
     <ScrollView style={styles.container}>
-      {/* <View>
+      <View>
         <TextInput style={styles.input} placeholder="Search.." placeholderTextColor={"white"} onChangeText={(text) => setSearch(text)} />
         {
           results.length > 0
           &&
-          <MovieCarousel topic="Search" searchedMovies={results} />
+          <SearchMovie topic={"search"} movies={results} loading={loading} />
         }
 
-      </View> */}
-      <Image source={require('../../assets/searchIcon.png')} style={styles.searchIcon} />
-
-
+      </View>
+ 
       <View style={{ marginTop: 40, marginLeft: 3 }}>
-        <MovieCarousel topic="Trending this month" endpoint='trending' />
+        <MovieCarousel topic="Trending this month" endpoint='trending' navigation={navigation} />
       </View>
 
       <View style={styles.backgroundWrapper}>
@@ -73,7 +74,7 @@ const SearchScreen = ({ navigation }: HomeTabScreenProps<'Search'>) => {
 
 
       <View style={{ marginTop: 60, marginLeft: 3 }}>
-        <MovieCarousel topic="Upcoming movies" endpoint='upcoming' />
+        <MovieCarousel topic="Upcoming movies" endpoint='upcoming' navigation={navigation} />
       </View>
 
     </ScrollView>
@@ -86,12 +87,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#002335",
 
   },
-  searchIcon: {
-    width: 24,
-    height: 24,
-    marginTop: -35,
-    marginLeft: 290,
-  },
+ 
   input: {
     width: 300,
     height: 40,

@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit'
-import type { PayloadAction } from '@reduxjs/toolkit'
 import { MovieDetail } from '../../types/MoviesTypes'
 import { getMovies } from '../asyncActions';
 
