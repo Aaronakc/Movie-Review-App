@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit"
 import { fetchMovies } from "../utils/fetchApi"
 import { MoviesPayload } from "../types/MoviesTypes"
 import { AddWishPayload, WishListMoviesFireStore } from "../types/WishListMovies"
-import { addToWish, getAllReviews, getAllWishLists,addReview, deleteReview, updateReview } from "../utils/firestoreDatabase"
+import { addToWish, getAllReviews, getAllWishLists,addReview, deleteReview, updateReview, deleteWishListByMovieId } from "../utils/firestoreDatabase"
 import { AddReviewPayload, Review, UpdateReviewPayload } from "../types/ReviewTypes"
 
 
@@ -34,6 +34,15 @@ export const addWishList=createAsyncThunk<AddWishPayload | null,AddWishPayload>(
         return null
     }
 )
+
+export const deleteWishList = createAsyncThunk<string | false, string>(
+  'wishlist/deleteWishList',
+  async (movieId) => {
+    const result = await deleteWishListByMovieId(movieId);
+    return result ? movieId : false;
+  }
+);
+
 
 export const getReviews=createAsyncThunk<Review[],string>(
   'movie/getReview',
