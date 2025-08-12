@@ -1,29 +1,50 @@
-import { View, Text, StyleSheet, Image, FlatList } from 'react-native'
+import { View, Text, StyleSheet, Image, FlatList, TouchableOpacity, Alert } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { WishListMoviesFireStore } from '../types/WishListMovies';
 import Toast from 'react-native-toast-message';
 import { getAllWishLists } from '../utils/firestoreDatabase';
 import Loader from './Loader';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import { fetchWishListMovies } from '../redux/asyncActions';
+import { deleteWishList, fetchWishListMovies } from '../redux/asyncActions';
 
 
 
 const ImageGallery = () => {
 
-  // const [wishlistMovies, setWishListMovies] = useState<WishListMoviesFireStore[]>([])
-  // const [loading, setLoading] = useState<boolean>(false)
-
-  const {wishlistmovies,loading}=useAppSelector(state=>state.wishlist)
-  const dispatch=useAppDispatch()
+  const { wishlistmovies, loading } = useAppSelector(state => state.wishlist)
+  const dispatch = useAppDispatch()
 
   useEffect(() => {
     const loadWishList = async () => {
-       await dispatch(fetchWishListMovies())
+      await dispatch(fetchWishListMovies())
     }
     loadWishList()
 
-}, [])
+  }, [])
+
+  const handleDelete = (movieId: string) => {
+    Alert.alert('Delete',
+      'Do you wana delete this movie from wishlist?',
+      [
+        { text: "Cancel", style: 'cancel' },
+        {
+          text: "Delete",
+          onPress: async () => {
+            const response = await dispatch(deleteWishList(movieId))
+            if (response.payload) {
+              Toast.show({ type: 'success', text1: 'Deleted successfully', visibilityTime: 1000 })
+            }
+            else {
+              Toast.show({ type: 'error', text1: 'failed to Deleted ', visibilityTime: 1000 })
+
+            }
+          }
+        }
+
+      ]
+    )
+
+  }
 
   if (loading) {
     return <Loader />
@@ -36,7 +57,11 @@ const ImageGallery = () => {
         style={styles.flatlistContainer}
         data={wishlistmovies}
         numColumns={4}
-        renderItem={({ item }) => <Image source={{ uri: item?.imgLink }} style={styles.image} />}
+        renderItem={({ item }) =>
+          <TouchableOpacity onPress={() => handleDelete(item.movieId)}>
+            <Image source={{ uri: item?.imgLink }} style={styles.image} />
+          </TouchableOpacity>
+        }
         keyExtractor={item => item?.movieId.toString()}
       />
     </View>
@@ -46,16 +71,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingLeft: 10,
-    paddingRight: 21,
     paddingTop: 30,
 
   },
   image: {
     objectFit: "cover",
-    width: 75,
+    width: 70,
     height: 110,
     borderRadius: 8,
-    margin: 4,
+    margin: 7,
 
   },
   flatlistContainer: {

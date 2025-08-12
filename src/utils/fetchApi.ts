@@ -21,7 +21,7 @@ export const fetchMovies = async (endpoint: string) => {
     const response = await axiosInstance.get(
       url
     );
-    console.log(response)
+    // console.log(response)
 
     return {
       [endpoint]: response.data.results 

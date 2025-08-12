@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { addWishList, fetchWishListMovies, getMovies } from '../asyncActions';
+import { addWishList, deleteWishList, fetchWishListMovies } from '../asyncActions';
 import { WishListMoviesFireStore } from '../../types/WishListMovies';
 
 
@@ -41,7 +41,7 @@ export const wishlistmovieSlice = createSlice({
     })
 
     .addCase(addWishList.fulfilled,(state,action)=>{
-      console.log(action.payload)
+      // console.log(action.payload)
       if(action.payload) {
         const {movieId,img_path}=action.payload
         console.log(action.payload)
@@ -54,6 +54,14 @@ export const wishlistmovieSlice = createSlice({
          state.wishlistmovies.push({movieId, imgLink:`https://image.tmdb.org/t/p/w200${img_path}`})
       }
      
+    })
+    .addCase(deleteWishList.fulfilled,(state,action)=>{{}
+      if(action.payload){
+        const movieId=action.payload
+        state.wishlistmovies=state.wishlistmovies.filter(wishlist=>wishlist.movieId != movieId)
+
+      }
+
     })
 
    

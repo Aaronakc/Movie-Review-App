@@ -44,12 +44,12 @@ const MovieReviewScreen = ({ navigation }: RootStackScreenProps<'MovieReviewScre
 
       if (response.payload && response.payload !== false) {
         navigation.goBack()
-        Toast.show({ type: "success", text1: "success", text2: "Review Added!" })
+        Toast.show({ type: "success", text1: "success", text2: "Review Added!",visibilityTime:800 })
       }
     }
     catch (error) {
       console.log(error)
-      Toast.show({ type: "error", text1: "Error", text2: "Something went wrong" })
+      Toast.show({ type: "error", text1: "Error", text2: "Something went wrong",visibilityTime:1000 })
     }
 
   }

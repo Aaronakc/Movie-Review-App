@@ -44,7 +44,7 @@ export const getAllReviews = async (movieId:string) => {
       
     }));
 
-    console.log('Fetched reviews:', reviews);
+    // console.log('Fetched reviews:', reviews);
     return reviews;
   } catch (error) {
     console.error('Error fetching reviews:', error);
@@ -121,7 +121,7 @@ export const addToWish=async(movieId:string,img_path:string)=>{
       userId:uid,
       movieId,
       imgLink:`https://image.tmdb.org/t/p/w200${img_path}` ,
-      createdAt: firestore.FieldValue.serverTimestamp(),
+   
     });
 
     return true;
@@ -133,6 +133,23 @@ export const addToWish=async(movieId:string,img_path:string)=>{
   }
 }
 
+
+export const deleteWishListByMovieId=async(movieId:string)=>{
+  const user=auth().currentUser;
+  if(!user) throw new Error('User not logged in')
+  const uid=user.uid
+
+  const wishListRef=firestore().collection('users').doc(uid).collection('wishlist')
+
+  const existing=await wishListRef.where('movieId','==',movieId).get()
+  if(existing.empty){
+    return false
+  }
+  const docId = existing.docs[0].id; 
+  await wishListRef.doc(docId).delete()
+  return true
+
+}
 
 export const getAllWishLists = async () => {
    const user = auth().currentUser;
