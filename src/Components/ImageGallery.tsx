@@ -20,23 +20,6 @@ const ImageGallery = () => {
   useEffect(() => {
     const loadWishList = async () => {
        await dispatch(fetchWishListMovies())
-      
-      // setLoading(true)
-      // try {
-      //   const movies = await getAllWishLists();
-      //   if (movies) {
-      //     setWishListMovies(movies)
-
-      //   }
-      // }
-      // catch (error) {
-      //   Toast.show({ type: "error", text1: "Error", text2: 'Something went wrong', visibilityTime: 1000 })
-      //   console.log('error from loading wish', error)
-      // }
-      // finally {
-      //   setLoading(false)
-
-      // }
     }
     loadWishList()
 

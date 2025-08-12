@@ -1,6 +1,5 @@
 import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
-import MovieCarousel from '../Components/MovieCarousel'
 import ImageGallery from '../Components/ImageGallery'
 
 const WishListScreen = () => {

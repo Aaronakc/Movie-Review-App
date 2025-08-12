@@ -24,9 +24,9 @@ const ProfileCard = ({ username, backgroundImg, profileImg, email, borderRadius,
           <FastImage source={profileImg} style={[styles.profileImage, { borderRadius: 65 }]} resizeMode='cover' />
         </View>
 
-        {/* <Text style={styles.emailText}>{email}</Text> */}
         <View style={styles.title}>
           <Text style={styles.titleText}>{username}</Text>
+        {/* <Text style={styles.emailText}>{email}</Text> */}
         </View>
         <View>
           <TouchableOpacity style={styles.button} onPress={onPress}>
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     width: 180,
     height: 60,
     flexWrap: 'wrap',
-    marginTop: 0,
+    marginTop: 5,
 
   },
   image: {
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: "#758e9290",
     marginHorizontal: 15,
-    marginTop: 20,
+    marginTop: 10,
     borderRadius: 15,
     paddingVertical: 10,
     alignItems: "center",

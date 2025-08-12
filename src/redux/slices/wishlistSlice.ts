@@ -1,9 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
-import type { PayloadAction } from '@reduxjs/toolkit'
-import { MovieDetail } from '../../types/MoviesTypes'
-import { fetchWishListMovies, getMovies } from '../asyncActions';
+import { addWishList, fetchWishListMovies, getMovies } from '../asyncActions';
 import { WishListMoviesFireStore } from '../../types/WishListMovies';
-import auth from '@react-native-firebase/auth';
+
 
 
 interface wishlistState {
@@ -23,18 +21,7 @@ export const wishlistmovieSlice = createSlice({
   name: 'wishlistmovie',
   initialState,
   reducers: {
-    addWishToReducer:(state,action)=>{
-        const {movieId,img_path}=action.payload
-        const movieExists=state.wishlistmovies.find(movie=> movie.movieId == movieId)
   
-        if(movieExists) {
-          return;
-        }
-  
-       state.wishlistmovies.push({movieId, imgLink:`https://image.tmdb.org/t/p/w200${img_path}`})
-    }
-  
-   
   },
     extraReducers: (builder) => {
     builder
@@ -53,10 +40,27 @@ export const wishlistmovieSlice = createSlice({
       state.error='error fetching wishlist movies'
     })
 
+    .addCase(addWishList.fulfilled,(state,action)=>{
+      console.log(action.payload)
+      if(action.payload) {
+        const {movieId,img_path}=action.payload
+        console.log(action.payload)
+          const movieExists=state.wishlistmovies.find(movie=> movie.movieId == movieId)
+    
+          if(movieExists) {
+            return;
+          }
+    
+         state.wishlistmovies.push({movieId, imgLink:`https://image.tmdb.org/t/p/w200${img_path}`})
+      }
+     
+    })
+
+   
   },
 })
 
-export const {addWishToReducer } = wishlistmovieSlice.actions
+export const { } = wishlistmovieSlice.actions
 
 
 export default wishlistmovieSlice.reducer

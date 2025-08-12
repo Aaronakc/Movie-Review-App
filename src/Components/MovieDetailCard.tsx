@@ -11,8 +11,8 @@ import Toast from 'react-native-toast-message';
 import Loader from './Loader';
 import { getAuth } from '@react-native-firebase/auth';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import { addWishList } from '../redux/asyncActions';
-import { addWishToReducer } from '../redux/slices/wishlistSlice';
+import { addWishList, deleteFromReview, editReview, getReviews } from '../redux/asyncActions';
+
 
 interface MovieCardProps {
   route: RouteProp<RootStackParamList, 'MovieDetailScreen'>;
@@ -20,18 +20,18 @@ interface MovieCardProps {
 }
 
 const MovieDetailCard = ({ route, navigation }: MovieCardProps) => {
-  // const [movie, setMovie] = useState<MovieDetail | null>(null);
-  // const [review, setReviews] = useState<Review[]>([])
-  // const [loading, setLoading] = useState(false)
-  // const [editId, setEditId] = useState('')
-  // const [editedText, setEditedText] = useState('')
-  // const [reload, setReload] = useState(false)
+  const [movieFromApi, setMovieFromApi] = useState<MovieDetail | null>(null);
+  const [editId, setEditId] = useState('')
+  const [editedText, setEditedText] = useState('')
+
+
 
   const dispatch = useAppDispatch()
   const id = route.params?.id
   let endpoint = route.params ? route.params.endpoint : "now_playing"
   let movie: MovieDetail | undefined;
-  const { movies, loading, error } = useAppSelector(state => state.movie)
+  const { movies } = useAppSelector(state => state.movie)
+  const { reviewmovies } = useAppSelector(state => state.review)
   if (endpoint && id) {
     let categorizedMovies = endpoint && movies[endpoint]
     let item = categorizedMovies.find(movie => movie.id == id)
@@ -43,174 +43,186 @@ const MovieDetailCard = ({ route, navigation }: MovieCardProps) => {
 
   useEffect(() => {
     const loadMovieDetail = async () => {
+      try {
+        const movieData = await fetchMovieDetail(id)
+        console.log('movie', movieData)
+        setMovieFromApi(movieData)
+      }
+      catch (error) {
+        Toast.show({ type: "error", text1: "Error", text2: 'Something went wrong', visibilityTime: 1000 })
+        console.log('error from movie detail', error)
 
-
-
+      }
     }
-    // const loadMovieDetail = async () => {
-    //   setLoading(true)
-    //   try {
-    //     const movieData = await fetchMovieDetail(id)
-    //     console.log('movie', movieData)
-    //     setMovie(movieData)
-    //   }
-    //   catch (error) {
-    //     Toast.show({ type: "error", text1: "Error", text2: 'Something went wrong', visibilityTime: 1000 })
-    //     console.log('error from movie detail', error)
-
-    //   }
-    //   finally {
-    //     setLoading(false)
-    //   }
-
-    // }
-    // if (id) {
-    //   loadMovieDetail()
-    // }
+    if (!endpoint && id) {
+      loadMovieDetail()
+    }
 
   }, [id])
+
 
   const addToWishList = async (id: string, poster_path: string) => {
     try {
       const response = await dispatch(addWishList({ movieId: id, img_path: poster_path }))
 
       if (response.payload) {
-        dispatch(addWishToReducer({ movieId: id, img_path: poster_path }))
-        // navigation?.navigate('Home');
         Toast.show({ type: "success", text1: "success", text2: "Wishlist Added!" })
       }
       else {
         Toast.show({ type: "info", text1: "Information", text2: "Wishlist already exit!", visibilityTime: 1000 })
-
       }
 
     }
     catch (error) {
+      Toast.show({ type: "error", text1: "Information", text2: "Something went wrong!", visibilityTime: 1000 })
       console.log(error)
     }
 
-
-    // try {
-    //   const response = await addToWish(id, poster_path)
-    //   if (response) {
-    //     navigation?.navigate('Home');
-    //     Toast.show({ type: "success", text1: "success", text2: "Wishlist Added!" })
-    //   }
-    //   else {
-    //     Toast.show({ type: "info", text1: "Information", text2: "Wishlist already exit!", visibilityTime: 1000 })
-
-    //   }
-    // }
-    // catch (error) {
-    //   Toast.show({ type: "error", text1: "error", text2: "Something went wrong", visibilityTime: 1000 })
-    //   console.log('error from wishlist', error)
-
-    // }
-
   }
-
-
 
 
   const handleDeleteComment = async (reviewId: string) => {
-    // const response = await deleteReview(reviewId)
-    // try {
-    //   if (response) {
-    //     setReviews(review => review.filter(r => r.id !== reviewId))
-    //     Toast.show({ type: "error", text1: "deleted successfully", visibilityTime: 1000 })
-
-    //   }
-    // }
-    // catch (error) {
-    //   console.log('error while deleting comment', error)
-    // }
+    try {
+      const response = await dispatch(deleteFromReview(reviewId))
+      if (response.payload) {
+        Toast.show({ type: "success", text1: "Deleted successfully", visibilityTime: 1000 })
+      } else {
+        Toast.show({ type: "error", text1: "Delete failed", visibilityTime: 1000 })
+      }
+    } catch (error) {
+      console.log('Error while deleting comment:', error)
+      Toast.show({ type: "error", text1: "Error", text2: "Something went wrong", visibilityTime: 1000 })
+    }
   }
 
+
   const handleEditComment = (reviewId: string, newComment: string) => {
-    // setEditId(reviewId)
-    // setEditedText(newComment)
+    setEditId(reviewId)
+    setEditedText(newComment)
   }
 
   const handleSaveComment = async () => {
-    // const response = await updateReview(editId, editedText)
-    // if (response) {
-    //   setEditId('')
-    //   setEditedText('')
-    //   setReload(!reload)
-    //   Toast.show({ type: "success", text1: "Review edited succesfully", visibilityTime: 1000 })
-    // }
+    try {
+      const response = await dispatch(editReview({ reviewId: editId, newComment: editedText }))
+      if (response.payload) {
+        setEditId('')
+        setEditedText('')
+        Toast.show({ type: "success", text1: "success", text2: "Review Edited!" })
+      }
+      else {
+        Toast.show({ type: "error", text1: "Error", text2: "failed to edit!", visibilityTime: 1000 })
+      }
+
+
+    }
+    catch (error) {
+      console.log(error)
+      Toast.show({ type: "error", text1: "Error", text2: "Something went wrong!", visibilityTime: 1000 })
+
+    }
 
   }
 
 
-  // useEffect(() => {
-  //   const loadReviews = async () => {
-  //     try {
-  //       const data = await getAllReviews(id)
-  //       // console.log('data', data)
-  //       setReviews(data)
-  //     }
-  //     catch (error) {
-  //       Toast.show({ type: "error", text1: "Error", text2: 'Something went wrong', visibilityTime: 1000 })
-  //       console.log("error fetching data from review", error)
+  useEffect(() => {
+    const loadReviews = async () => {
+      try {
+        const response = dispatch(getReviews(id))
+      }
+      catch (error) {
+        console.log(error)
+        Toast.show({ type: "error", text1: "Error", text2: "Something went wrong!", visibilityTime: 1000 })
+      }
 
-  //     }
-  //   }
-  //   loadReviews()
+    }
+    loadReviews()
 
 
-  // }, [reload])
+  }, [])
 
-  if (loading) {
-    return <Loader />
-  }
+  // if (loading) {
+  //   return <Loader />
+  // }
 
   return (
     <ScrollView style={styles.mainContainer}>
 
       {
-        movie && <>
-          <View style={styles.container}>
-            <View style={styles.imageContainer}>
-              <FastImage source={{ uri: `https://image.tmdb.org/t/p/w200${movie?.backdrop_path}` }} style={styles.image} resizeMode='cover' />
+        movie && !movieFromApi ?
+          <>
+            <View style={styles.container}>
+              <View style={styles.imageContainer}>
+                <FastImage source={{ uri: `https://image.tmdb.org/t/p/w200${movie?.backdrop_path}` }} style={styles.image} resizeMode='cover' />
+              </View>
+              <FastImage source={{ uri: `https://image.tmdb.org/t/p/w200${movie?.poster_path}` }} style={styles.profileImage} resizeMode='contain' />
+              <View style={styles.title}>
+                <Text style={styles.titleText}>{movie?.original_title}</Text>
+              </View>
+
+              <View style={{ flexDirection: "row", gap: 5 }}>
+                <TouchableOpacity style={styles.button} onPress={() => navigation?.navigate('MovieReviewScreen', { id: id, endpoint })}>
+                  <Text style={{ color: "white" }}>Add Review</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.button} onPress={() => {
+                  if (movie?.id && movie?.poster_path) {
+                    addToWishList(movie.id, movie.poster_path)
+                  }
+                }}>
+                  <Text style={{ color: "white" }}>Add to Fav</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-            <FastImage source={{ uri: `https://image.tmdb.org/t/p/w200${movie?.poster_path}` }} style={styles.profileImage} resizeMode='contain' />
-            <View style={styles.title}>
-              <Text style={styles.titleText}>{movie?.original_title}</Text>
+
+
+            <View style={styles.overViewContainer}>
+              <Text style={styles.overviewText}>{movie?.overview}</Text>
+            </View>
+          </>
+          :
+          <>
+            <View style={styles.container}>
+              <View style={styles.imageContainer}>
+                <FastImage source={{ uri: `https://image.tmdb.org/t/p/w200${movieFromApi?.backdrop_path}` }} style={styles.image} resizeMode='cover' />
+              </View>
+              <FastImage source={{ uri: `https://image.tmdb.org/t/p/w200${movieFromApi?.poster_path}` }} style={styles.profileImage} resizeMode='contain' />
+              <View style={styles.title}>
+                <Text style={styles.titleText}>{movieFromApi?.original_title}</Text>
+              </View>
+
+              <View style={{ flexDirection: "row", gap: 5 }}>
+                <TouchableOpacity style={styles.button} onPress={() => navigation?.navigate('MovieReviewScreen', { id: id, endpoint })}>
+                  <Text style={{ color: "white" }}>Add Review</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.button} onPress={() => {
+                  if (movieFromApi?.id && movieFromApi?.poster_path) {
+                    addToWishList(movieFromApi.id, movieFromApi.poster_path)
+                  }
+                }}>
+                  <Text style={{ color: "white" }}>Add to Fav</Text>
+                </TouchableOpacity>
+              </View>
             </View>
 
-            <View style={{ flexDirection: "row", gap: 5 }}>
-              <TouchableOpacity style={styles.button} onPress={() => navigation?.navigate('MovieReviewScreen', { id: id })}>
-                <Text style={{ color: "white" }}>Add Review</Text>
-              </TouchableOpacity>
 
-              <TouchableOpacity style={styles.button} onPress={() => {
-                if (movie?.id && movie?.poster_path) {
-                  addToWishList(movie.id, movie.poster_path)
-                }
-              }}>
-                <Text style={{ color: "white" }}>Add to Fav</Text>
-              </TouchableOpacity>
+            <View style={styles.overViewContainer}>
+              <Text style={styles.overviewText}>{movieFromApi?.overview}</Text>
             </View>
-          </View>
-
-
-          <View style={styles.overViewContainer}>
-            <Text style={styles.overviewText}>{movie?.overview}</Text>
-          </View>
-        </>
+          </>
       }
 
 
 
 
-      {/* <View style={styles.reviewContainer}>
+      <View style={styles.reviewContainer}>
         <Text style={styles.reviewHeading}>Reviews</Text>
-        {review && review.length > 0 ? (
-          review.map((item) => (
+        {reviewmovies && reviewmovies.length > 0 ? (
+          reviewmovies.map((item) => (
             <View key={item.id} style={styles.commentSection}>
               <Text style={styles.commentText}>
                 Review by <Text style={{ color: '#FFB703' }}>{item.username}</Text>
+
               </Text>
 
               <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
@@ -251,7 +263,7 @@ const MovieDetailCard = ({ route, navigation }: MovieCardProps) => {
             No Reviews Yet
           </Text>
         )}
-      </View> */}
+      </View>
 
     </ScrollView>
 

@@ -6,7 +6,7 @@ import { Review } from '../types/ReviewTypes';
 export const addReview = async (movieId: string, comment: string) => {
   const user = auth().currentUser;
 
-  const userName=user?.email?.split('@')[0]
+  const username=user?.email?.split('@')[0]
 
   if (!user) {
     throw new Error('User not logged in');
@@ -14,14 +14,19 @@ export const addReview = async (movieId: string, comment: string) => {
 
   try {
     const reviewRef = await firestore().collection('reviews').add({
-      username:userName,
+      username:username,
       movieId,
       userId: user.uid,
       comment,
-      createdAt: firestore.FieldValue.serverTimestamp(),
     });
 
-    return reviewRef.id;
+    return {
+      id:reviewRef.id,
+      username,
+      movieId,
+      userId:user.uid,
+      comment,
+    };
   } catch (error) {
     console.error('Error adding review:', error);
     throw error;
@@ -36,6 +41,7 @@ export const getAllReviews = async (movieId:string) => {
     const reviews: Review[] = snapshot.docs.map(doc => ({
       id: doc.id,
       ...(doc.data() as Omit<Review, 'id'>),
+      
     }));
 
     console.log('Fetched reviews:', reviews);
@@ -83,8 +89,7 @@ export const updateReview=async(reviewId:string,newComment:string)=>{
 
     await firestore().collection('reviews').doc(reviewId).update({
       comment:newComment,
-      updatedAt:firestore.FieldValue.serverTimestamp()
-
+      
     })
     return true
 

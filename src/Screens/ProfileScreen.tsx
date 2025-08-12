@@ -22,8 +22,8 @@ const ProfileScreen = ({ navigation }: HomeTabScreenProps<'Profile'>) => {
       <ProfileCard backgroundImg={require('../../assets/profilepic.jpg')} profileImg={require('../../assets/profilePic.png')} username={username} email={email} onPress={handleLogout} />
 
       <View style={styles.carousel}>
-        <MovieCarousel topic='Favorites' endpoint='favorite' />
-        <MovieCarousel topic='Recently Watched Movies' endpoint='watchlist' />
+        <MovieCarousel topic='Favorites' endpoint='favorite' navigation={navigation} />
+        <MovieCarousel topic='Recently Watched Movies' endpoint='watchlist' navigation={navigation} />
       </View>
     </ScrollView>
   )
