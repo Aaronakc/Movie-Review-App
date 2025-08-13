@@ -14,6 +14,15 @@ interface MovieState {
     watchlist:MovieDetail[],
 
   };
+  totalPages: {
+    now_playing?: number,
+    popular?: number,
+    top_rated?: number,
+    upcoming?: number,
+    trending?: number,
+    favorite?: number,
+    watchlist?: number,
+  };
   loading:boolean;
   error:string | null;
    
@@ -29,6 +38,7 @@ const initialState: MovieState = {
     favorite:[],
     watchlist:[],
   },
+  totalPages:{},
   loading:false,
   error:null,
 }
@@ -46,7 +56,8 @@ export const movieSlice = createSlice({
       const keys = Object.keys(action.payload); 
       const firstKey = keys[0] as keyof typeof state.movies; 
       if(action.payload[firstKey]){
-        state.movies[firstKey]=action.payload[firstKey]
+        state.movies[firstKey]=[...state.movies[firstKey],...action.payload[firstKey]]
+        state.totalPages[firstKey] = action.payload.totalPages || 1 
         state.loading=false
         state.error=null
       }
@@ -55,9 +66,10 @@ export const movieSlice = createSlice({
       state.loading=true
       state.error=null
     })
-    .addCase(getMovies.rejected,(state)=>{
+
+    .addCase(getMovies.rejected,(state,action)=>{
       state.loading=false
-      state.error='error fetching movies'
+      state.error=action.error.message ||'error fetching movies'
     })
 
   },

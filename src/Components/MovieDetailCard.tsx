@@ -30,7 +30,7 @@ const MovieDetailCard = ({ route, navigation }: MovieCardProps) => {
   const id = route.params?.id
   let endpoint = route.params ? route.params.endpoint : "now_playing"
   let movie: MovieDetail | undefined;
-  const { movies } = useAppSelector(state => state.movie)
+  const { movies, loading, error } = useAppSelector(state => state.movie)
   const { reviewmovies } = useAppSelector(state => state.review)
   if (endpoint && id) {
     let categorizedMovies = endpoint && movies[endpoint]
@@ -66,7 +66,7 @@ const MovieDetailCard = ({ route, navigation }: MovieCardProps) => {
       const response = await dispatch(addWishList({ movieId: id, img_path: poster_path }))
 
       if (response.payload) {
-        Toast.show({ type: "success", text1: "success", text2: "Wishlist Added!" ,visibilityTime:800})
+        Toast.show({ type: "success", text1: "success", text2: "Wishlist Added!", visibilityTime: 800 })
       }
       else {
         Toast.show({ type: "info", text1: "Information", text2: "Wishlist already exit!", visibilityTime: 1000 })
@@ -107,7 +107,7 @@ const MovieDetailCard = ({ route, navigation }: MovieCardProps) => {
       if (response.payload) {
         setEditId('')
         setEditedText('')
-        Toast.show({ type: "success", text1: "success", text2: "Review Edited!" ,visibilityTime:800})
+        Toast.show({ type: "success", text1: "success", text2: "Review Edited!", visibilityTime: 800 })
       }
       else {
         Toast.show({ type: "error", text1: "Error", text2: "failed to edit!", visibilityTime: 1000 })
@@ -140,9 +140,15 @@ const MovieDetailCard = ({ route, navigation }: MovieCardProps) => {
 
   }, [])
 
-  // if (loading) {
-  //   return <Loader />
-  // }
+  useEffect(() => {
+    if (error) {
+      Toast.show({ type: 'error', text1: 'Error', text2: error });
+    }
+  }, [error])
+
+  if (loading) {
+    return <Loader />
+  }
 
   return (
     <ScrollView style={styles.mainContainer}>

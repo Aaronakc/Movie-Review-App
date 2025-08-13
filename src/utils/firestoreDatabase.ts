@@ -166,7 +166,7 @@ export const getAllWishLists = async () => {
       imgLink: doc.data().imgLink,
     }));
 
-    console.log('Fetched wishlist:', wishlists);
+    // console.log('Fetched wishlist:', wishlists);
     return wishlists;
   } catch (error) {
     console.error('Error fetching reviews:', error);

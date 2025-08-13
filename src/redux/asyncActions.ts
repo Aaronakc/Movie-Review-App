@@ -1,16 +1,16 @@
 import { createAsyncThunk } from "@reduxjs/toolkit"
 import { fetchMovies } from "../utils/fetchApi"
-import { MoviesPayload } from "../types/MoviesTypes"
+import { MoreMoviesPayload, MoviesPayload } from "../types/MoviesTypes"
 import { AddWishPayload, WishListMoviesFireStore } from "../types/WishListMovies"
 import { addToWish, getAllReviews, getAllWishLists,addReview, deleteReview, updateReview, deleteWishListByMovieId } from "../utils/firestoreDatabase"
 import { AddReviewPayload, Review, UpdateReviewPayload } from "../types/ReviewTypes"
 
 
 
-export const getMovies = createAsyncThunk<MoviesPayload,string>(
+export const getMovies = createAsyncThunk<MoviesPayload & {totalPages:number},MoreMoviesPayload>(
   'movie/getMovies',
-    async (endpoint: string) => {
-    const response = await fetchMovies(endpoint)
+    async ({endpoint,page}) => {
+    const response = await fetchMovies(endpoint,page)
     return response
   },
 )

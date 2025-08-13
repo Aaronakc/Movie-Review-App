@@ -1,8 +1,8 @@
-import { View, Text, FlatList, Image, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native'
+import { View, Text, FlatList, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { Movies } from '../types/MoviesTypes'
 import FastImage from 'react-native-fast-image';
-import { BottomTabParamList, HomeTabScreenProps, RootStackParamList } from '../types/NavigationTypes';
+import { RootStackParamList } from '../types/NavigationTypes';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 

@@ -25,22 +25,31 @@ export const wishlistmovieSlice = createSlice({
   },
     extraReducers: (builder) => {
     builder
+    .addCase(fetchWishListMovies.pending,(state)=>{
+      state.loading=true
+      state.error=null
+    })
+
     .addCase(fetchWishListMovies.fulfilled, (state, action) => {
       state.loading=false
       state.wishlistmovies=action.payload
       state.error=null
       
     })
-    .addCase(fetchWishListMovies.pending,(state)=>{
+    
+    .addCase(fetchWishListMovies.rejected,(state,action)=>{
+      state.loading=false
+      state.error=action.error.message ||'error fetching wishlist movies'
+    })
+
+   .addCase(addWishList.pending,(state)=>{
       state.loading=true
       state.error=null
     })
-    .addCase(fetchWishListMovies.rejected,(state)=>{
-      state.loading=false
-      state.error='error fetching wishlist movies'
-    })
 
     .addCase(addWishList.fulfilled,(state,action)=>{
+      state.loading=false
+      state.error=null
       // console.log(action.payload)
       if(action.payload) {
         const {movieId,img_path}=action.payload
@@ -55,13 +64,30 @@ export const wishlistmovieSlice = createSlice({
       }
      
     })
-    .addCase(deleteWishList.fulfilled,(state,action)=>{{}
+
+     .addCase(addWishList.rejected,(state,action)=>{
+      state.loading=false
+      state.error=action.error.message ||'error adding wishlist'
+    })
+
+    .addCase(deleteWishList.pending,(state)=>{
+      state.loading=true
+      state.error=null
+    })
+
+    
+     .addCase(deleteWishList.fulfilled,(state,action)=>{
+      state.loading=false
+      state.error=null
       if(action.payload){
         const movieId=action.payload
         state.wishlistmovies=state.wishlistmovies.filter(wishlist=>wishlist.movieId != movieId)
-
       }
+    })
 
+    .addCase(deleteWishList.rejected,(state,action)=>{
+      state.loading=false
+      state.error=action.error.message ||'error deleting wishlist'
     })
 
    

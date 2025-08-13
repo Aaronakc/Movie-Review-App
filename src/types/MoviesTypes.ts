@@ -3,6 +3,12 @@ export interface Movies{
   title:string;
   poster_path:string;
 };
+
+export interface MoreMoviesPayload{
+  endpoint:string;
+  page?:number;
+}
+
 export interface MovieDetail{
   id:string;
   title:string;
