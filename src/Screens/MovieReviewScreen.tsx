@@ -2,26 +2,24 @@ import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image } from 'reac
 import React, { useEffect, useState } from 'react'
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { RootStackParamList, RootStackScreenProps } from '../types/NavigationTypes';
-import { addReview } from '../utils/firestoreDatabase';
-import { fetchMovieDetail } from '../utils/fetchMovieDetail';
 import { MovieDetail } from '../types/MoviesTypes';
 import FastImage from 'react-native-fast-image';
 import Toast from 'react-native-toast-message';
 import { addToReview } from '../redux/asyncActions';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import auth from '@react-native-firebase/auth';
+
 
 type MovieReviewRouteProp = RouteProp<RootStackParamList, 'MovieReviewScreen'>;
 const MovieReviewScreen = ({ navigation }: RootStackScreenProps<'MovieReviewScreen'>) => {
   const [comment, setComment] = useState('');
-  // const [movie, setMovie] = useState<MovieDetail | null>(null);
+
 
 
   const route = useRoute<MovieReviewRouteProp>();
   const id = route.params?.id
   let endpoint = route.params ? route.params.endpoint : "now_playing"
   let movie: MovieDetail | undefined;
-  const { movies } = useAppSelector(state => state.movie)
+  const { movies, error } = useAppSelector(state => state.movie)
 
   if (endpoint && id) {
     let categorizedMovies = endpoint && movies[endpoint]
@@ -44,16 +42,21 @@ const MovieReviewScreen = ({ navigation }: RootStackScreenProps<'MovieReviewScre
 
       if (response.payload && response.payload !== false) {
         navigation.goBack()
-        Toast.show({ type: "success", text1: "success", text2: "Review Added!",visibilityTime:800 })
+        Toast.show({ type: "success", text1: "success", text2: "Review Added!", visibilityTime: 800 })
       }
     }
     catch (error) {
       console.log(error)
-      Toast.show({ type: "error", text1: "Error", text2: "Something went wrong",visibilityTime:1000 })
+      Toast.show({ type: "error", text1: "Error", text2: "Something went wrong", visibilityTime: 1000 })
     }
 
   }
 
+  useEffect(() => {
+    if (error) {
+      Toast.show({ type: 'error', text1: 'Error', text2: error });
+    }
+  }, [error])
 
   return (
     <View style={styles.container}>

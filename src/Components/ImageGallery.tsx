@@ -11,7 +11,7 @@ import { deleteWishList, fetchWishListMovies } from '../redux/asyncActions';
 
 const ImageGallery = () => {
 
-  const { wishlistmovies, loading } = useAppSelector(state => state.wishlist)
+  const { wishlistmovies, loading, error } = useAppSelector(state => state.wishlist)
   const dispatch = useAppDispatch()
 
   useEffect(() => {
@@ -45,6 +45,12 @@ const ImageGallery = () => {
     )
 
   }
+
+  useEffect(() => {
+    if (error) {
+      Toast.show({ type: 'error', text1: 'Error', text2: error });
+    }
+  }, [error])
 
   if (loading) {
     return <Loader />
